@@ -1,0 +1,1 @@
+<flux:navlist.item icon="inbox" badge="{{ $new_users }}" href="#">Inbox</flux:navlist.item>
