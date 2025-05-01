@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -26,7 +27,9 @@ class AppServiceProvider extends ServiceProvider
                 ->subject('Verifikasi Email')
                 ->line('Silahkan tunggu email verifikasi dari admin.')
                 ->line('Terima Kasih.');
-            // ->action('Verify Email Address', $url);
+        });
+        Gate::before(function ($user, $ability) {
+            return $user->hasRole('Super Admin') ? true : null;
         });
     }
 }

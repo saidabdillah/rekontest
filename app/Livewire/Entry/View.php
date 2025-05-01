@@ -10,7 +10,6 @@ class View extends Component
     public $date, $kode, $bukti;
     public function render()
     {
-        $mahasiswa = Mahasiswa::all();
         return view('livewire.entry.view', [
             'students' => [],
         ]);

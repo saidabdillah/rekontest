@@ -16,6 +16,7 @@ class LinkUser extends Component
 
     public function render()
     {
+        // DatabaseNotification::whereNull('read_at')->update(['read_at' => now()]);
         return view('livewire.components-livewire.link-user');
     }
 }

@@ -18,25 +18,42 @@
             <flux:navlist.group :heading="__('Platform')" class="grid">
                 <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')"
                     wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
-                <livewire:components-livewire.link-user />
             </flux:navlist.group>
         </flux:navlist>
+        @role('super admin')
         <flux:navlist variant="outline">
             <flux:navlist.group :heading="__('Users')" class="grid">
-                <flux:navlist.item icon="home" :href="route('users.view')" :current="request()->routeIs('users.view')"
+                <livewire:components-livewire.link-user />
+                <flux:navlist.item icon="user" :href="route('users.view')" :current="request()->routeIs('users.view')"
                     wire:navigate>{{ __('Users') }}</flux:navlist.item>
             </flux:navlist.group>
         </flux:navlist>
+        @endrole
+        @role('super admin')
         <flux:navlist variant="outline">
             <flux:navlist.group :heading="__('Laporan')" class="grid">
-                <flux:navlist.item icon="plus" :href="route('entry.create')"
-                    :current="request()->routeIs('entry.create')" wire:navigate>{{ __('Entry') }}
-                </flux:navlist.item>
-                <flux:navlist.item icon="archive-box-arrow-down" :href="route('entry.view')"
-                    :current="request()->routeIs('entry.view')" wire:navigate>{{ __('Lihat Data Entry') }}
-                </flux:navlist.item>
+                <flux:navlist.group expandable heading="Rekonsialisasi" class="hidden lg:grid">
+                    <flux:navlist.item :href="route('entry.create')" :current="request()->routeIs('entry.create')"
+                        wire:navigate>{{ __('Entry') }}
+                    </flux:navlist.item>
+                    <flux:navlist.item :href="route('entry.view')" :current="request()->routeIs('entry.view')"
+                        wire:navigate>{{ __('Lihat Data
+                        Entry') }}</flux:navlist.item>
+                </flux:navlist.group>
             </flux:navlist.group>
         </flux:navlist>
+        @endrole
+        @role('admin')
+        <flux:navlist variant="outline">
+            <flux:navlist.group :heading="__('Laporan')" class="grid">
+                <flux:navlist.group expandable heading="Rekonsialisasi" class="hidden lg:grid">
+                    <flux:navlist.item :href="route('entry.view')" :current="request()->routeIs('entry.view')"
+                        wire:navigate>{{ __('Lihat Data
+                        Entry') }}</flux:navlist.item>
+                </flux:navlist.group>
+            </flux:navlist.group>
+        </flux:navlist>
+        @endrole
         <flux:navlist variant="outline">
             <flux:navlist.group :heading="__('Cetak')" class="grid">
                 {{-- <flux:navlist.item icon="printer" :href="route('dashboard')"

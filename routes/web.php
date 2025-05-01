@@ -13,24 +13,24 @@ Route::get('/', function () {
 })->name('home');
 
 Route::prefix('entry')->group(function () {
-    Route::get('/create', EntryCreate::class)->name('entry.create');
-    Route::get('/view', EntryView::class)->name('entry.view');
-})->middleware(['auth', 'verified']);
+    Route::get('/create', EntryCreate::class)->name('entry.create')->middleware('auth', 'role:super admin');
+    Route::get('/view', EntryView::class)->name('entry.view')->middleware('auth', 'role:super admin|admin');
+});
 
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-Route::prefix('entry')->group(function () {
+Route::middleware(['role:super admin', 'auth'])->group(function () {
     Route::view('/users', 'users')
-        ->middleware(['auth', 'verified'])
+        // ->middleware(['auth', 'verified'])
         ->name('users.view');
+    Route::view('/users/edit', 'editUser')
+        ->name('user.edit');
+    Route::view('/messages/user', 'messages')
+        ->name('messages.index');
 });
-
-Route::view('/users', 'users')
-    ->middleware(['auth', 'verified'])
-    ->name('users.view');
 
 // Route::middleware(['auth'])->group(function () {
 //     Route::redirect('settings', 'settings/profile');

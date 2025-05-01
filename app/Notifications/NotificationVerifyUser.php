@@ -51,6 +51,7 @@ class NotificationVerifyUser extends Notification
     {
         return [
             'message' => "{$this->user->name} sudah melakukan pendaftaran akun, silahkan verifikasi email user.",
+            'user' => $this->user
         ];
     }
 }

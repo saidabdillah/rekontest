@@ -6,6 +6,8 @@ use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,12 +16,32 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
 
-        User::factory()->create([
+        $superAdmin = Role::create(['name' => 'super admin']);
+        $admin = Role::create(['name' => 'admin']);
+
+        $permissions = [
+            'view',
+            'create',
+            'update',
+            'delete'
+        ];
+
+        foreach ($permissions as $permission) {
+            Permission::create(['name' => $permission]);
+        }
+
+        $superAdmin->syncPermissions($permissions);
+        $admin->givePermissionTo(['view', 'create']);
+
+        $user = User::factory()->create([
             'name' => 'Admin',
             'email' => 'admin@example.com',
             'password' => Hash::make('password'),
         ]);
+
+
+        $user->assignRole($superAdmin);
+        $user->syncPermissions($permissions);
     }
 }
