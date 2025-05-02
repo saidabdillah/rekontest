@@ -15,7 +15,7 @@ class MahasiswaImport implements ToModel
     public function model(array $row)
     {
         return new Mahasiswa([
-            'nama' => $row[1],
+            'nama'  => $row[1],
             'nim' => $row[2],
         ]);
     }

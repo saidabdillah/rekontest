@@ -1,10 +1,10 @@
 <div>
     <flux:heading size="xl">Messages</flux:heading>
     <flux:separator class="my-5" />
-    <section class="w-1/2 h-[850px] overflow-y-auto bg-zinc-100 p-10 rounded-md">
+    <section class="w-full md:w-3/4 lg:w-1/2 h-[850px] overflow-y-auto bg-zinc-100 p-10 rounded-md">
         <ul class="h-full">
             @foreach ($notifications as $notification)
-            <li class="flex flex-col px-10 py-5 mb-5 bg-zinc-300 rounded-xl">
+            <li wire:key="{{ $notification->id }}" class="flex flex-col px-10 py-5 mb-5 bg-white rounded-xl">
                 <div class="flex justify-between itcems-center">
                     <div>
                         <h3 class="text-2xl font-medium">{{ $notification->data['user']['name'] }}</h3>

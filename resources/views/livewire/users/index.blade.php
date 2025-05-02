@@ -1,5 +1,4 @@
 <div>
-
     <flux:heading size="xl">Users</flux:heading>
     <flux:separator class="my-5" />
 
@@ -12,7 +11,6 @@
                     <th>Email</th>
                     <th>Status</th>
                     <th>Role</th>
-                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -22,7 +20,7 @@
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
                     @if (is_null($user->email_verified_at))
-                    <td>
+                    <td class="text-center">
                         <flux:modal.trigger name="verifikasi-user-{{$user->id}}">
                             <flux:button>Belum Diverifikasi</flux:button>
                         </flux:modal.trigger>

@@ -32,6 +32,7 @@ class Create extends Component
             'excelFile2' => 'required|mimes:xlsx,csv,xls|max:2048',
         ]);
         Excel::import(new MahasiswaImport(), $this->excelFile2);
+        session()->flash('status', 'Data Berhasil Diupload');
         return redirect()->route('entry.view');
     }
 }

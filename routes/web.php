@@ -1,36 +1,38 @@
 <?php
 
-use App\Livewire\Entry\Create as EntryCreate;
-use App\Livewire\Entry\View as EntryView;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
-use App\Livewire\Users\UsersView;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return redirect('login');
 })->name('home');
 
+// Users
+Route::prefix('users')->group(function () {
+    Route::middleware('role:super admin')->group(function () {
+        Route::view('/', 'users')
+            ->name('users.index');
+        Route::view('/messages', 'messages')
+            ->name('messages.index');
+    });
+});
+
+// Entry
 Route::prefix('entry')->group(function () {
-    Route::get('/create', EntryCreate::class)->name('entry.create')->middleware('auth', 'role:super admin');
-    Route::get('/view', EntryView::class)->name('entry.view')->middleware('auth', 'role:super admin|admin');
+    Route::view('/', 'entry')
+        ->name('entry.index')
+        ->middleware('role:super admin|admin');
+    Route::view('/create', 'create-entry')
+        ->name('entry.create')
+        ->middleware('role:super admin');
 });
 
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
-
-Route::middleware(['role:super admin', 'auth'])->group(function () {
-    Route::view('/users', 'users')
-        // ->middleware(['auth', 'verified'])
-        ->name('users.view');
-    Route::view('/users/edit', 'editUser')
-        ->name('user.edit');
-    Route::view('/messages/user', 'messages')
-        ->name('messages.index');
-});
 
 // Route::middleware(['auth'])->group(function () {
 //     Route::redirect('settings', 'settings/profile');

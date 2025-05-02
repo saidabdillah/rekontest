@@ -1,3 +1,3 @@
 <x-layouts.app :title="__('View Entry')">
-    <livewire:entry.view-entry />
+    <livewire:entry.index />
 </x-layouts.app>

@@ -6,28 +6,26 @@ use App\Models\User;
 use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Livewire\Attributes\Url;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
-class UsersView extends Component
+class Index extends Component
 {
     use WithPagination;
     public $roles;
+    public $user;
+    public $permissions = [];
 
 
     public function mount()
     {
+        $this->permissions = Permission::all();
         $this->roles = Role::whereNotIn('name', ['super admin'])->get();
     }
 
-    // public function updating()
-    // {
-    //     $this->roles = Role::whereNotIn('name', ['super admin'])->get();
-    // }
-
     public function render()
     {
-        return view('livewire.users.users-view', [
+        return view('livewire.users.index', [
             'users' => User::withoutRole('super admin')->with('roles')->get(),
         ]);
     }

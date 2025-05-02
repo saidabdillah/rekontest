@@ -2,8 +2,8 @@
 
 namespace App\Livewire\Messages;
 
-use App\Models\User;
 use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Notifications\Notification;
 use Livewire\Component;
 
 class Index extends Component
