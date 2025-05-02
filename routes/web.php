@@ -3,6 +3,7 @@
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
+use App\Livewire\Users\Edit;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -14,6 +15,8 @@ Route::prefix('users')->group(function () {
     Route::middleware('role:super admin')->group(function () {
         Route::view('/', 'users')
             ->name('users.index');
+        Route::get('/edit/{user:name}', Edit::class)
+            ->name('user.edit');
         Route::view('/messages', 'messages')
             ->name('messages.index');
     });
@@ -21,13 +24,18 @@ Route::prefix('users')->group(function () {
 
 // Entry
 Route::prefix('entry')->group(function () {
-    Route::view('/', 'entry')
-        ->name('entry.index')
-        ->middleware('role:super admin|admin');
-    Route::view('/create', 'create-entry')
-        ->name('entry.create')
-        ->middleware('role:super admin');
+    Route::group(['middleware' => ['can:view']], function () {
+        Route::prefix('/')->group(function () {
+            Route::view('/', 'entry')
+                ->name('entry.index');
+        });
+    });
+    Route::group(['middleware' => ['permission:create']], function () {
+        Route::view('/create', 'create-entry')
+            ->name('entry.create');
+    });
 });
+
 
 
 Route::view('dashboard', 'dashboard')

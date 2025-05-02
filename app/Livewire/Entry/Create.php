@@ -23,7 +23,7 @@ class Create extends Component
         ]);
         Excel::import(new MahasiswaImport(), $this->excelFile1);
         session()->flash('status', 'Data Berhasil Diupload');
-        return redirect()->route('entry.view');
+        return redirect()->route('entry.index');
     }
 
     public function simpanFileExcel2()
@@ -33,6 +33,6 @@ class Create extends Component
         ]);
         Excel::import(new MahasiswaImport(), $this->excelFile2);
         session()->flash('status', 'Data Berhasil Diupload');
-        return redirect()->route('entry.view');
+        return redirect()->route('entry.index');
     }
 }

@@ -10,7 +10,7 @@
                     <th>Nama</th>
                     <th>Email</th>
                     <th>Status</th>
-                    <th>Role</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -24,7 +24,7 @@
                         <flux:modal.trigger name="verifikasi-user-{{$user->id}}">
                             <flux:button>Belum Diverifikasi</flux:button>
                         </flux:modal.trigger>
-                        <flux:modal name="verifikasi-user-{{$user->id}}" class="min-w-[26rem]">
+                        <flux:modal name="verifikasi-user-{{$user->id}}" class="min-w-[26rem] text-left">
                             <div class="space-y-6">
                                 <div>
                                     <flux:heading size="lg">Apakah Anda Yakin Ingin Memverifikasi </br> {{ $user->name
@@ -40,8 +40,7 @@
                                     <flux:modal.close>
                                         <flux:button variant="ghost">Cancel</flux:button>
                                     </flux:modal.close>
-                                    <flux:button type="submit" variant="filled"
-                                        wire:click="verifyUser({{ $user->id }})">
+                                    <flux:button variant="filled" wire:click="verifyUser({{ $user->id }})">
                                         Aktifkan</flux:button>
                                 </div>
                             </div>
@@ -52,18 +51,17 @@
                         <flux:badge color="blue">Terverifikasi</flux:badge>
                     </td>
                     @endif
-                    @foreach ($user->roles as $role)
                     <td class="text-center">
-                        {{ Str::upper($role->name) }}
+                        <flux:button href="{{ route('user.edit', $user) }}" wire:navigate>Edit
+                        </flux:button>
                     </td>
-                    @endforeach
                 </tr>
                 @endforeach
             </tbody>
         </table>
     </section>
     {{-- <div class="w-1/3 mt-10">
-        {{ $users->links(data: ['scrollTo' => false]) }}
+        {{ $users->links() }}
     </div> --}}
 
 
