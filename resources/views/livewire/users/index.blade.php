@@ -14,6 +14,44 @@
                 </tr>
             </thead>
             <tbody>
+                @if(isset($searchUser))
+                <tr>
+                    <td>1.</td>
+                    <td>{{ $searchUser->name }}</td>
+                    <td>{{ $searchUser->email }}</td>
+                    <td class="text-center">
+                        <flux:modal.trigger name="verifikasi-user-{{$searchUser->id}}">
+                            <flux:button>Belum Diverifikasi</flux:button>
+                        </flux:modal.trigger>
+                        <flux:modal name="verifikasi-user-{{$searchUser->id}}" class="min-w-[26rem] text-left">
+                            <div class="space-y-6">
+                                <div>
+                                    <flux:heading size="lg">Apakah Anda Yakin Ingin Memverifikasi </br> {{
+                                        $searchUser->name
+                                        }} ?
+                                    </flux:heading>
+                                    <flux:text class="mt-2">
+                                        <p>You're about to delete this project.</p>
+                                        <p>This action cannot be reversed.</p>
+                                    </flux:text>
+                                </div>
+                                <div class="flex gap-2">
+                                    <flux:spacer />
+                                    <flux:modal.close>
+                                        <flux:button variant="ghost">Cancel</flux:button>
+                                    </flux:modal.close>
+                                    <flux:button variant="filled" wire:click="verifyUser({{ $searchUser->id }})">
+                                        Aktifkan</flux:button>
+                                </div>
+                            </div>
+                        </flux:modal>
+                    </td>
+                    <td class="text-center">
+                        <flux:button href="{{ route('user.edit', $searchUser) }}" wire:navigate>Edit
+                        </flux:button>
+                    </td>
+                </tr>
+                @else
                 @foreach ($users as $index => $user)
                 <tr>
                     <td>{{ $index + 1 }}.</td>
@@ -57,15 +95,14 @@
                     </td>
                 </tr>
                 @endforeach
+                @endif
+
             </tbody>
         </table>
     </section>
+
+    {{-- Pagination --}}
     {{-- <div class="w-1/3 mt-10">
         {{ $users->links() }}
     </div> --}}
-
-
-    @if (session('status'))
-    <livewire:components-livewire.toast :message="session('status')" />
-    @endif
 </div>

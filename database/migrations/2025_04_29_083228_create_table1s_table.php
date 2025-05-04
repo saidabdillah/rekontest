@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('urut');
             $table->date('tanggal');
             $table->string('kode_transaksi');
-            $table->string('penerimaan');
-            $table->string('pengeluaran');
+            $table->integer('penerimaan');
+            $table->integer('pengeluaran');
             $table->text('uraian');
             $table->timestamps();
         });

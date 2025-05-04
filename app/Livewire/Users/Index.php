@@ -5,6 +5,7 @@ namespace App\Livewire\Users;
 use App\Models\User;
 use Carbon\Carbon;
 use Flux\Flux;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Spatie\Permission\Models\Role;
@@ -12,18 +13,25 @@ use Spatie\Permission\Models\Role;
 class Index extends Component
 {
     use WithPagination;
-    public $user;
-    public $users;
+    public $users = [];
     public $roles;
+    public $searchUser;
+
+    #[Url()]
+    public $user;
 
     public function mount()
     {
-        $this->users = User::withoutRole('super admin')->with('roles')->latest()->get();
+        $this->searchUser = User::find($this->user);
+        if (!$this->user) {
+            $this->users = User::withoutRole('super admin')->with('roles')->latest()->get();
+        }
         $this->roles = Role::whereNotIn('name', ['super admin'])->get();
     }
 
     public function render()
     {
+
         return view('livewire.users.index');
     }
 
@@ -34,5 +42,6 @@ class Index extends Component
         $user->save();
         session()->flash('status', "{$user->name} berhasil diverifikasi.");
         Flux::modals()->close();
+        return redirect()->route('users.index');
     }
 }

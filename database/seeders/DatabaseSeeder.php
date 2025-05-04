@@ -32,7 +32,6 @@ class DatabaseSeeder extends Seeder
         }
 
         $superAdmin->syncPermissions($permissions);
-        $admin->givePermissionTo(['view', 'create']);
 
         $user = User::factory()->create([
             'name' => 'Admin',

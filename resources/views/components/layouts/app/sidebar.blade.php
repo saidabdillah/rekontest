@@ -24,7 +24,7 @@
         @role('super admin')
         <flux:navlist variant="outline">
             <flux:navlist.group :heading="__('Users')" class="grid">
-                <flux:navlist.group expandable heading="Users" class="hidden lg:grid">
+                <flux:navlist.group expandable heading="Users" class="grid">
                     <flux:navlist.item icon="users" :href="route('users.index')"
                         :current="request()->routeIs('users.index')" wire:navigate>{{ __('Users') }}
                     </flux:navlist.item>
@@ -36,15 +36,15 @@
 
         <flux:navlist variant="outline">
             <flux:navlist.group :heading="__('Laporan')" class="grid">
-                <flux:navlist.group expandable heading="Rekonsialisasi" class="hidden lg:grid">
+                <flux:navlist.group expandable heading="Rekonsialisasi" class="grid">
+                    @can('view')
+                    <flux:navlist.item icon="clipboard" :href="route('entry.index')"
+                        :current="request()->routeIs('entry.index')" wire:navigate>{{ __('Entry') }}</flux:navlist.item>
+                    @endcan
                     @can('create')
                     <flux:navlist.item icon="clipboard" :href="route('entry.create')"
                         :current="request()->routeIs('entry.create')" wire:navigate>{{ __('Create Entry') }}
                     </flux:navlist.item>
-                    @endcan
-                    @can('view')
-                    <flux:navlist.item icon="clipboard" :href="route('entry.index')"
-                        :current="request()->routeIs('entry.index')" wire:navigate>{{ __('Entry') }}</flux:navlist.item>
                     @endcan
                 </flux:navlist.group>
             </flux:navlist.group>
@@ -168,6 +168,10 @@
 
     {{ $slot }}
 
+
+    @if (session('status'))
+    <livewire:components-livewire.toast :message="session('status')" />
+    @endif
     @fluxScripts
 </body>
 

@@ -25,12 +25,11 @@ Route::prefix('users')->group(function () {
 // Entry
 Route::prefix('entry')->group(function () {
     Route::group(['middleware' => ['can:view']], function () {
-        Route::prefix('/')->group(function () {
-            Route::view('/', 'entry')
-                ->name('entry.index');
-        });
+        Route::view('/', 'entry')
+            ->name('entry.index');
     });
-    Route::group(['middleware' => ['permission:create']], function () {
+
+    Route::group(['middleware' => ['can:create']], function () {
         Route::view('/create', 'create-entry')
             ->name('entry.create');
     });
