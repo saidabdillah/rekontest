@@ -2,9 +2,9 @@
 
 namespace App\Livewire\Entry;
 
-use App\Imports\MahasiswaImport;
-use App\Imports\table1Import;
-use App\Imports\table2Import;
+use App\Imports\BkubudImport;
+use App\Imports\RekonImport;
+use App\Models\Rekon;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Maatwebsite\Excel\Facades\Excel;
@@ -12,35 +12,36 @@ use Maatwebsite\Excel\Facades\Excel;
 class Create extends Component
 {
     use WithFileUploads;
-    public $excelFile1, $excelFile2;
+    public $rekon, $bkubud;
 
     public function render()
     {
         return view('livewire.entry.create');
     }
 
-    public function simpanFileExcel1()
+    public function uploadRekon()
     {
-        $validate = $this->validate([
-            'excelFile1' => 'required|mimes:xlsx,csv,xls|max:2048',
+        $this->validate([
+            'rekon' => 'required|mimes:xlsx,csv,xls|max:2048',
         ], [
-            'excelFile1.required' => 'File tidak boleh kosong.',
-            'excelFile1.mimes' => 'File harus berupa xlsx, csv, atau xls.',
-            'excelFile1.max' => 'Ukuran file maksimal 2 MB.',
+            'rekon.required' => 'File tidak boleh kosong.',
+            'rekon.mimes' => 'File harus berupa xlsx, csv, atau xls.',
+            'rekon.max' => 'Ukuran file maksimal 2 MB.',
         ]);
 
-        Excel::import(new table1Import(), $this->excelFile1);
-        session()->flash('status', 'Data Berhasil Diupload');
+        Rekon::truncate();
+        Excel::import(new RekonImport(), $this->rekon);
+        session()->flash('status', 'Data Rekon Berhasil Diupload');
         return redirect()->route('entry.index');
     }
 
-    public function simpanFileExcel2()
+    public function uploadBKUBUD()
     {
         $this->validate([
-            'excelFile2' => 'required|mimes:xlsx,csv,xls|max:2048',
+            'bkubud' => 'required|mimes:xlsx,csv,xls|max:2048',
         ]);
-        Excel::import(new table2Import(), $this->excelFile2);
-        session()->flash('status', 'Data Berhasil Diupload');
+        Excel::import(new BkubudImport(), $this->bkubud);
+        session()->flash('status', 'Data BKUBUD Berhasil Diupload');
         return redirect()->route('entry.index');
     }
 }

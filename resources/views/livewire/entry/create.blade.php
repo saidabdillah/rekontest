@@ -3,15 +3,15 @@
     <flux:separator class="my-5" />
 
     <section class="grid gap-4 mt-10">
-        <form wire:submit="simpanFileExcel1" enctype="multipart/form-data">
+        <form wire:submit="uploadRekon" enctype="multipart/form-data">
             <div class="grid gap-4 sm:w-1/2 xl:w-1/3 items-end">
-                <flux:input type="file" wire:model="excelFile1" label="Tabel 1" />
-                <flux:button variant="primary" type="submit">Upload</flux:button>
+                <flux:input type="file" wire:model="rekon" label="Rekon" />
+                <flux:button variant="primary" type="submit">Upload Rekon</flux:button>
             </div>
         </form>
-        <form wire:submit="simpanFileExcel2" enctype="multipart/form-data">
+        <form wire:submit="uploadBKUBUD" enctype="multipart/form-data">
             <div class="grid gap-4 sm:w-1/2 xl:w-1/3 items-end">
-                <flux:input type="file" wire:model="excelFile2" label="Tabel 2" />
+                <flux:input type="file" wire:model="bkubud" label="BKUBUD" />
                 <flux:button variant="primary" type="submit">Upload</flux:button>
             </div>
         </form>

@@ -2,8 +2,6 @@
     <flux:heading size="xl">Lihat Entry</flux:heading>
     <flux:separator class="my-5" />
 
-
-
     <flux:modal.trigger name="view-entry-1">
         <flux:button variant="primary">Cari Table 1</flux:button>
     </flux:modal.trigger>
@@ -18,12 +16,14 @@
 
                 <flux:input label="Tanggal Transaksi" type="date" wire:model="date" wire:change="cariTanggal" />
 
-                <flux:select wire:model="kode_transaksi" label="Kode Transaksi" placholder="Pilih Kode Transaksi"
-                    wire:select="cariKodeTransaksi">
+                <flux:select wire:model="kode_transaksi" label="Kode Transaksi" placholder="Pilih Kode Transaksi">
                     <flux:select.option>Pilih Kode Transaksi</flux:select.option>
-                    @foreach ($codes as $code)
-                    <flux:select.option>{{ $code }}</flux:select.option>
+                    @if(isset($rekon))
+                    @foreach ($rekon as $value)
+                    <flux:select.option>{{ $value->kode_transaksi . '-' . $value->tanggal . '-' . $value->penerimaan}}
+                    </flux:select.option>
                     @endforeach
+                    @endif
                 </flux:select>
                 <div class="flex">
                     <flux:spacer />
@@ -56,33 +56,33 @@
 
     <section>
         <div class="grid gap-x-4">
-            @if($table1)
+            @if($rekon)
             <div class="mt-10 grid md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
                 <flux:field>
                     <flux:label>Hal</flux:label>
-                    <flux:input disabled value="{{ $table1->hal }}" />
+                    <flux:input disabled value="{{ $rekon->hal }}" />
                 </flux:field>
                 <flux:field>
                     <flux:label>Urut</flux:label>
-                    <flux:input disabled value="{{ $table1->urut }}" />
+                    <flux:input disabled value="{{ $rekon->urut }}" />
                 </flux:field>
                 <flux:field>
                     <flux:label>Tanggal</flux:label>
-                    <flux:input disabled value="{{ $table1->tanggal }}" />
+                    <flux:input disabled value="{{ $rekon->tanggal }}" />
                 </flux:field>
                 <flux:field>
                     <flux:label>Kode Transaksi</flux:label>
-                    <flux:input disabled value="{{ $table1->kode_transaksi }}" />
+                    <flux:input disabled value="{{ $rekon->kode_transaksi }}" />
                 </flux:field>
                 <flux:field>
                     <flux:label>Penerimaan</flux:label>
-                    <flux:input disabled value="{{ $table1->penerimaan }}" />
+                    <flux:input disabled value="{{ $rekon->penerimaan }}" />
                 </flux:field>
                 <flux:field>
                     <flux:label>Pengeluaran</flux:label>
-                    <flux:input disabled value="{{ $table1->pengeluaran }}" />
+                    <flux:input disabled value="{{ $rekon->pengeluaran }}" />
                 </flux:field>
-                <flux:textarea disabled label="Uraian" rows="auto">{{ $table1->uraian }}
+                <flux:textarea disabled label="Uraian" rows="auto">{{ $rekon->uraian }}
                 </flux:textarea>
                 <flux:field>
                     <flux:label>Total Kode Transaksi</flux:label>
@@ -95,7 +95,7 @@
             </flux:modal.trigger>
             @endif
             @if($table2)
-            <div class="mt-10 grid md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+            <div class="mt-8 grid md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
                 <flux:field>
                     <flux:label>Tanggal</flux:label>
                     <flux:input disabled value="{{ $table2->tanggal }}" />
@@ -124,15 +124,17 @@
     </section>
 
     @can('create')
-    {{-- <section>
+    @if($rekon && $table2 && !$isActiveUpload)
+    <section>
         <flux:heading class="mt-10 mb-3" size="xl">Upload Bukti</flux:heading>
         <form wire:submit="">
             <div class="grid sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
                 <flux:input type="file" wire:model="logo" />
-                <flux:button variant="primary">Upload</flux:button>
+                <flux:button variant="primary" type="submit">Simpan</flux:button>
             </div>
         </form>
-    </section> --}}
+    </section>
+    @endif
     @endcan
 
 </div>

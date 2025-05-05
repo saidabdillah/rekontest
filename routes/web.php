@@ -12,7 +12,7 @@ Route::get('/', function () {
 
 // Users
 Route::prefix('users')->group(function () {
-    Route::middleware('role:super admin')->group(function () {
+    Route::middleware('role:super admin', 'auth')->group(function () {
         Route::view('/', 'users')
             ->name('users.index');
         Route::get('/edit/{user:name}', Edit::class)
@@ -22,14 +22,15 @@ Route::prefix('users')->group(function () {
     });
 });
 
+
 // Entry
 Route::prefix('entry')->group(function () {
-    Route::group(['middleware' => ['can:view']], function () {
+    Route::group(['middleware' => ['can:view', 'auth']], function () {
         Route::view('/', 'entry')
             ->name('entry.index');
     });
 
-    Route::group(['middleware' => ['can:create']], function () {
+    Route::group(['middleware' => ['can:create', 'auth']], function () {
         Route::view('/create', 'create-entry')
             ->name('entry.create');
     });
