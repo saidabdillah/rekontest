@@ -23,7 +23,6 @@ class Index extends Component
     public $nomor_bukti;
     public $totalKodeTransaksi;
     public $totalNomorBukti;
-    public $aktif;
 
     public $query = '';
     use WithFileUploads;

@@ -136,9 +136,7 @@
     <section>
         <form wire:submit="simpanEntry">
             <div class="grid sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
-                @if($aktif)
                 <flux:button variant="primary" type="submit">Simpan</flux:button>
-                @endif
             </div>
         </form>
     </section>
