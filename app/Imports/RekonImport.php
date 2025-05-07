@@ -23,6 +23,7 @@ class RekonImport implements ToCollection, WithHeadingRow, WithCalculatedFormula
     {
         foreach ($rows as $row) {
             Rekon::create([
+                'id_rekon' => $row['kode_transaksi'] . '-' .  Date::excelToDateTimeObject($row['tanggal'])->format('Y-m-d') . '-' . $row['penerimaan'] . '-' . $row['pengeluaran'],
                 'hal' => $row['hal'],
                 'urut' => $row['urut'],
                 'tanggal' => Date::excelToDateTimeObject($row['tanggal'])->format('Y-m-d'),

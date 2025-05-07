@@ -31,6 +31,11 @@ class Register extends Component
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+        ], [
+            'name.required' => 'Nama harus diisi.',
+            'email.required' => 'Email harus diisi.',
+            'email.unique' => 'Email sudah terdaftar.',
+            'password.required' => 'Kata sandi harus diisi.',
         ]);
 
         $validated['password'] = Hash::make($validated['password']);

@@ -37,6 +37,9 @@ class Edit extends Component
         ]);
 
         $user->syncPermissions($this->selectedPermissions);
-        return redirect()->route('users.index')->with('status', 'Data berhasil disimpan.');
+        return redirect()->route('users.index')->with([
+            'type' => 'success',
+            'status' => 'Data berhasil disimpan.'
+        ]);
     }
 }

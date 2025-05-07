@@ -6,7 +6,7 @@
         <flux:button variant="primary">Rekon</flux:button>
     </flux:modal.trigger>
 
-    <flux:modal name="lihat-rekon" class="w-sm lg:w-3xl" :dismissible="false">
+    <flux:modal name="lihat-rekon" class="w-sm lg:w-3xl">
         <form wire:submit="cariRekon">
             <div class="space-y-6">
                 <div>
@@ -14,12 +14,14 @@
                     <flux:text class="mt-2">Lorem ipsum dolor sit amet.</flux:text>
                 </div>
 
-                <flux:input label="Tanggal Transaksi" type="date" wire:model="tanggal" wire:change="cariTanggal" />
+                <flux:input label="Tanggal Transaksi" type="date" wire:model="tanggal" autofocus
+                    wire:change="cariTanggal" />
 
                 <flux:select wire:model="kode_transaksi" label="Kode Transaksi" placholder="Pilih Kode Transaksi">
                     <flux:select.option>Pilih Kode Transaksi</flux:select.option>
                     @forelse ($kodeTransaksi as $kode)
-                    <flux:select.option>{{ $kode }}</flux:select.option>
+                    <flux:select.option>{{ $kode->kode_transaksi . ' ' . $kode->tanggal . ' ' . $kode->pengeluaran}}
+                    </flux:select.option>
                     @empty
                     <flux:select.option>Tidak Ada</flux:select.option>
                     @endforelse
@@ -37,67 +39,62 @@
             <div class="mt-10 grid md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
                 <flux:field>
                     <flux:label>Hal</flux:label>
-                    <flux:input disabled value="{{ $rekon->hal ?? '' }}" />
+                    <flux:input readonly value="{{ $rekon->hal ?? '' }}" />
                 </flux:field>
                 <flux:field>
                     <flux:label>Urut</flux:label>
-                    <flux:input disabled value="{{ $rekon->urut ?? '' }}" />
+                    <flux:input readonly value="{{ $rekon->urut ?? '' }}" />
                 </flux:field>
                 <flux:field>
                     <flux:label>Tanggal</flux:label>
-                    <flux:input disabled value="{{ $rekon->tanggal ?? '' }}" />
+                    <flux:input readonly value="{{ $rekon->tanggal ?? '' }}" />
                 </flux:field>
                 <flux:field>
                     <flux:label>Kode Transaksi</flux:label>
-                    <flux:input disabled value="{{ $rekon->kode_transaksi ?? '' }}" />
+                    <flux:input readonly value="{{ $rekon->kode_transaksi ?? '' }}" />
                 </flux:field>
                 <flux:field>
                     <flux:label>Penerimaan</flux:label>
-                    <flux:input disabled value="{{ $rekon->penerimaan ?? '' }}" />
+                    <flux:input readonly value="{{ $rekon->penerimaan ?? '' }}" />
                 </flux:field>
                 <flux:field>
                     <flux:label>Pengeluaran</flux:label>
-                    <flux:input disabled value="{{ $rekon->pengeluaran ?? '' }}" />
+                    <flux:input readonly value="{{ $rekon->pengeluaran ?? '' }}" />
                 </flux:field>
-                <flux:textarea disabled label="Uraian" rows="auto">{{ $rekon->uraian ?? '' }}
+                <flux:textarea readonly label="Uraian" rows="auto">{{ $rekon->uraian ?? '' }}
                 </flux:textarea>
                 <flux:field>
                     <flux:label>Total Kode Transaksi</flux:label>
-                    <flux:input disabled value="{{ $totalKodeTransaksi ?? 0 }}" />
+                    <flux:input readonly value="{{ $totalKodeTransaksi ?? '' }}" />
                 </flux:field>
             </div>
 
             <flux:separator class="mt-10 mb-5" />
 
-            <flux:modal.trigger name="lihat-bkubud">
+            <flux:modal.trigger name="lihat-bkubud" wire:click="cariBkubuds">
                 <flux:button variant="primary" class="w-fit">BKU_BUD</flux:button>
             </flux:modal.trigger>
 
-            <flux:modal name="lihat-bkubud" class="w-sm lg:w-3xl" :dismissible="false">
+            <flux:modal name="lihat-bkubud" class="w-sm lg:w-3xl">
                 <form wire:submit="cariBkubud">
                     <div class="space-y-6">
                         <div>
                             <flux:heading size="lg">Cari BKU_BUD</flux:heading>
                             <flux:text class="mt-2">Lorem ipsum dolor sit amet.</flux:text>
                         </div>
+                        <div x-data>
+                            <flux:input type="search" autofocus wire:model="query" placeholder="Cari BKUBUD"
+                                wire:keydown="cariBkubuds" wire:click="cariBkubuds" wire:load="cariBkubuds" />
 
-                        <div x-data="{ isOpen: false }" class="relative">
-                            <input type="search" id="searchInput" x-on:input="isOpen = true"
-                                class="block w-full p-2 border border-gray-300 rounded-md" placeholder="Search...">
-                            <div x-show="isOpen" id="suggestions"
-                                class="absolute mt-2 bg-white border border-gray-300 rounded-md shadow-md w-full">
-                                said ganteng
-                            </div>
+                            <ul class="mt-2 overflow-y-auto max-h-64">
+                                @foreach($bkubuds as $item)
+                                <li class="py-1 px-3 cursor-pointer mb-2 hover:bg-zinc-100 rounded dark:hover:bg-zinc-100 dark:hover:text-black"
+                                    wire:click="cariBkubud">
+                                    {{
+                                    $item->no_bukti }}</li>
+                                @endforeach
+                            </ul>
                         </div>
-
-                        <flux:select wire:model="nomor_bukti" label="Nomor Bukti" placholder="Pilih Nomor Bukti">
-                            <flux:select.option>Pilih Nomor Bukti</flux:select.option>
-                            @forelse ($nomorBukti as $bukti)
-                            <flux:select.option>{{ $bukti }}</flux:select.option>
-                            @empty
-                            <flux:select.option>Tidak Ada</flux:select.option>
-                            @endforelse
-                        </flux:select>
                         <div class="flex">
                             <flux:spacer />
                             <flux:button type="submit" variant="primary">Cari</flux:button>
@@ -109,37 +106,39 @@
             <div class="mt-10 grid md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
                 <flux:field>
                     <flux:label>Tanggal</flux:label>
-                    <flux:input disabled value="{{ $bkubud->tanggal ?? '' }}" />
+                    <flux:input readonly value="{{ $bkubud->tanggal ?? '' }}" />
                 </flux:field>
                 <flux:field>
                     <flux:label>Nomor Bukti</flux:label>
-                    <flux:input disabled value="{{ $bkubud->no_bukti ?? '' }}" />
+                    <flux:input readonly value="{{ $bkubud->no_bukti ?? '' }}" />
                 </flux:field>
-                <flux:textarea disabled label="Uraian" rows="auto">{{ $bkubud->uraian ?? '' }}
+                <flux:textarea readonly label="Uraian" rows="auto">{{ $bkubud->uraian ?? '' }}
                 </flux:textarea>
                 <flux:field>
                     <flux:label>Penerimaan</flux:label>
-                    <flux:input disabled value="{{ $bkubud->penerimaan ?? '' }}" />
+                    <flux:input readonly value="{{ $bkubud->penerimaan ?? '' }}" />
                 </flux:field>
                 <flux:field>
                     <flux:label>Pengeluaran</flux:label>
-                    <flux:input disabled value="{{ $bkubud->pengeluaran ?? '' }}" />
+                    <flux:input readonly value="{{ $bkubud->pengeluaran ?? '' }}" />
                 </flux:field>
                 <flux:field>
                     <flux:label>Total Nomor Bukti</flux:label>
-                    <flux:input disabled value="{{ $totalNomorBukti ?? 0 }}" />
+                    <flux:input readonly value="{{ $totalNomorBukti ?? '' }}" />
                 </flux:field>
             </div>
         </div>
     </section>
 
     @can('create')
+    <flux:separator class="mt-10 mb-5" />
+
     <section>
-        <flux:heading class="mt-10 mb-3" size="xl">Upload Bukti</flux:heading>
-        <form wire:submit="">
+        <form wire:submit="simpanEntry">
             <div class="grid sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
-                <flux:input type="file" wire:model="logo" />
+                @if($aktif)
                 <flux:button variant="primary" type="submit">Simpan</flux:button>
+                @endif
             </div>
         </form>
     </section>

@@ -15,10 +15,15 @@ use Livewire\Component;
 #[Layout('components.layouts.auth')]
 class Login extends Component
 {
-    #[Validate('required|string|email')]
+    #[Validate('required|string|email', message: [
+        'required' => 'Email wajib diisi',
+        'email' => 'Email tidak valid',
+    ])]
     public string $email = '';
 
-    #[Validate('required|string')]
+    #[Validate('required|string', message: [
+        'required' => 'Password wajib diisi',
+    ])]
     public string $password = '';
 
     public bool $remember = false;
@@ -72,6 +77,6 @@ class Login extends Component
      */
     protected function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->email).'|'.request()->ip());
+        return Str::transliterate(Str::lower($this->email) . '|' . request()->ip());
     }
 }

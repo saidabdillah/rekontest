@@ -23,8 +23,6 @@ class DatabaseSeeder extends Seeder
         $permissions = [
             'view',
             'create',
-            'update',
-            'delete'
         ];
 
         foreach ($permissions as $permission) {

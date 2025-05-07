@@ -11,18 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rekon', function (Blueprint $table) {
+        Schema::create('tb_data', function (Blueprint $table) {
             $table->id();
+            $table->string('tanggal_kode_transaksi');
+            $table->string('tanggal_nomor_bukti');
             $table->string('id_rekon');
-            $table->string('hal');
-            $table->string('urut');
-            $table->date('tanggal');
             $table->string('kode_transaksi');
-            $table->bigInteger('penerimaan');
-            $table->bigInteger('pengeluaran');
-            $table->text('uraian');
+            $table->string('nomor_bukti');
+            $table->bigInteger('total_rekon');
+            $table->bigInteger('total_bukti');
+            $table->string('file_path');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rekon');
+        Schema::dropIfExists('tb_data');
     }
 };

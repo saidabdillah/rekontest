@@ -28,6 +28,8 @@ Route::prefix('entry')->group(function () {
     Route::group(['middleware' => ['can:view', 'auth']], function () {
         Route::view('/', 'entry')
             ->name('entry.index');
+        Route::view('/upload-pdf', 'upload-pdf')
+            ->name('upload.pdf');
     });
 
     Route::group(['middleware' => ['can:create', 'auth']], function () {
@@ -35,6 +37,8 @@ Route::prefix('entry')->group(function () {
             ->name('entry.create');
     });
 });
+
+
 
 
 

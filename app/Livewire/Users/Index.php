@@ -5,42 +5,45 @@ namespace App\Livewire\Users;
 use App\Models\User;
 use Carbon\Carbon;
 use Flux\Flux;
-use Livewire\Attributes\Url;
 use Livewire\Component;
+use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
-use Spatie\Permission\Models\Role;
 
 class Index extends Component
 {
-    use WithPagination;
-    public $users = [];
-    public $roles;
-    public $searchUser;
-
-    #[Url()]
+    use WithPagination, WithoutUrlPagination;
     public $user;
-
-    public function mount()
-    {
-        $this->searchUser = User::find($this->user);
-        if (!$this->user) {
-            $this->users = User::withoutRole('super admin')->with('roles')->latest()->get();
-        }
-        $this->roles = Role::whereNotIn('name', ['super admin'])->get();
-    }
+    public $data;
 
     public function render()
     {
+        $users = User::nonAdmin()->when(
+            $this->user,
+            fn($query) =>
+            $query->where('name', 'like', '%' . $this->user . '%')
+        )
+            ->latest()
+            ->paginate(10);
 
-        return view('livewire.users.index');
+        return view('livewire.users.index', compact('users'));
     }
 
-    public function verifyUser($user)
+
+    public function cariUser()
     {
-        $user = User::find($user);
+        $this->data = User::where('name', 'like', '%' . $this->user . '%')->latest()->get();
+    }
+
+    public function verifyUser($userId)
+    {
+        $user = User::findOrFail($userId);
+
         $user->email_verified_at = Carbon::now();
         $user->save();
+
+        session()->flash('type', 'success');
         session()->flash('status', "{$user->name} berhasil diverifikasi.");
+
         Flux::modals()->close();
         return redirect()->route('users.index');
     }

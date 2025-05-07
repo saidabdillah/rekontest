@@ -42,7 +42,7 @@
                         :current="request()->routeIs('entry.index')" wire:navigate>{{ __('Entry') }}</flux:navlist.item>
                     @endcan
                     @can('create')
-                    <flux:navlist.item icon="clipboard" :href="route('entry.create')"
+                    <flux:navlist.item icon="plus" :href="route('entry.create')"
                         :current="request()->routeIs('entry.create')" wire:navigate>{{ __('Create Entry') }}
                     </flux:navlist.item>
                     @endcan
@@ -52,8 +52,8 @@
 
         <flux:navlist variant="outline">
             <flux:navlist.group :heading="__('Cetak')" class="grid">
-                {{-- <flux:navlist.item icon="printer" :href="route('dashboard')"
-                    :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Cetak') }}</flux:navlist.item> --}}
+                <flux:navlist.item icon="printer" :href="route('upload.pdf')"
+                    :current="request()->routeIs('upload.pdf')" wire:navigate>{{ __('Upload PDF') }}</flux:navlist.item>
             </flux:navlist.group>
         </flux:navlist>
 
@@ -170,7 +170,7 @@
 
 
     @if (session('status'))
-    <livewire:components-livewire.toast :message="session('status')" />
+    <livewire:components-livewire.toast :type="session('type')" :message="session('status')" />
     @endif
     @fluxScripts
 </body>
