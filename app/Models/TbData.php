@@ -13,6 +13,6 @@ class TbData extends Model
     #[Scope]
     protected function cari(Builder $query, $cari): void
     {
-        $query->where('nomor_bukti', 'like', '%' . $cari . '%');
+        $query->where('nomor_bukti', 'like', '%' . $cari . '%')->orWhere('kode_transaksi', 'like', '%' . $cari . '%');
     }
 }

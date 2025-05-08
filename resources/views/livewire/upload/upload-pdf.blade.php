@@ -12,6 +12,7 @@
         <table class="w-[2000px]">
             <thead>
                 <tr>
+                    <th>No.</th>
                     <th>Tanggal Kode Transaksi</th>
                     <th>Tanggal Nomor Bukti</th>
                     <th>ID Rekon</th>
@@ -25,6 +26,9 @@
             <tbody>
                 @foreach ($tb_data as $data)
                 <tr>
+                    <td>
+                        {{ $loop->iteration + ($tb_data->currentPage() - 1) * $tb_data->perPage() }}
+                    </td>
                     <td>{{ $data->tanggal_kode_transaksi }}</td>
                     <td>{{ $data->tanggal_nomor_bukti }}</td>
                     <td>{{ $data->id_rekon }}</td>

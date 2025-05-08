@@ -48,6 +48,11 @@ class UploadPdf extends Component
         }
     }
 
+    public function updatingCari()
+    {
+        if (!empty($this->cari)) $this->resetPage();
+    }
+
 
     public function render()
     {

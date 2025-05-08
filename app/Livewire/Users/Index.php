@@ -23,7 +23,7 @@ class Index extends Component
             $query->where('name', 'like', '%' . $this->user . '%')
         )
             ->latest()
-            ->paginate(10);
+            ->paginate(1);
 
         return view('livewire.users.index', compact('users'));
     }
@@ -32,6 +32,11 @@ class Index extends Component
     public function cariUser()
     {
         $this->data = User::where('name', 'like', '%' . $this->user . '%')->latest()->get();
+    }
+
+    public function updatingUser()
+    {
+        if (!empty($this->user)) $this->resetPage();
     }
 
     public function verifyUser($userId)

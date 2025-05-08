@@ -14,6 +14,7 @@
         <table class="w-[1000px]">
             <thead>
                 <tr>
+                    <th>No.</th>
                     <th>Nama</th>
                     <th>Email</th>
                     <th>Status</th>
@@ -21,8 +22,9 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($users as $index => $user)
+                @foreach ($users as $user)
                 <tr>
+                    <td>{{ $loop->iteration + ($users->currentPage() - 1) * $users->perPage() }}</td>
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
                     @if (is_null($user->email_verified_at))
