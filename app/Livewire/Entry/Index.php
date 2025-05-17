@@ -38,26 +38,33 @@ class Index extends Component
         $this->totalNomorBukti = '';
     }
 
-    // public function pilihBkubud($bkubud)
-    // {
-    //     $this->query = $bkubud;
-    //     $this->dispatch('aktif');
-    // }
-
-    // wire:click="pilihBkubud('{{  $item->no_bukti}}')"
+    public function pilihBkubud($bkubud)
+    {
+        $this->query = $bkubud;
+        $this->dispatch('aktif');
+    }
 
 
     public function cariTanggal()
     {
-        $dataRekon = Rekon::where('tanggal', $this->tanggal)->get();
-        $this->kodeTransaksi = $dataRekon;
+        $this->kodeTransaksi = Rekon::where('tanggal', $this->tanggal)->get();
     }
 
     public function cariRekon()
     {
         try {
-            $this->kode_transaksi = explode(' ', $this->kode_transaksi)[0];
             $this->rekon = Rekon::where('kode_transaksi', $this->kode_transaksi)->first();
+            $this->totalKodeTransaksi = $this->rekon->penerimaan + $this->rekon->pengeluaran;
+            $this->modal('lihat-rekon')->close();
+        } catch (\Throwable $th) {
+            $this->modal('lihat-rekon')->close();
+        }
+    }
+
+    public function pilihRekon($rekon)
+    {
+        try {
+            $this->rekon = Rekon::where('kode_transaksi', $rekon)->first();
             $this->totalKodeTransaksi = $this->rekon->penerimaan + $this->rekon->pengeluaran;
             $this->modal('lihat-rekon')->close();
         } catch (\Throwable $th) {
@@ -70,27 +77,30 @@ class Index extends Component
         $this->nomorBukti = Bkubud::all()->pluck('no_bukti')->toArray();
     }
 
+    #[On('aktif')]
     public function cariBkubud()
     {
         try {
             $this->bkubud = Bkubud::where('no_bukti', 'like', '%' . $this->query . '%')->first();
             $this->totalNomorBukti = $this->bkubud->penerimaan + $this->bkubud->pengeluaran;
-            if ($this->totalKodeTransaksi != $this->totalNomorBukti) {
+
+            if ($this->totalKodeTransaksi !== $this->totalNomorBukti) {
+                $this->bkubud = [];
+                $this->totalNomorBukti = '';
                 throw new Exception('Data tidak sesuai');
             };
-            $this->aktif = true;
+
             $this->modal('lihat-bkubud')->close();
         } catch (\Throwable $th) {
-            return redirect()->route('entry.index')->with([
-                'type' => 'error',
-                'status' => $th->getMessage(),
-            ]);
+            $this->modal('lihat-bkubud')->close();
+            $this->dispatch('total-match', message: $th->getMessage(), type: 'error', title: 'Gagal');
         }
     }
 
     public function simpanEntry()
     {
         try {
+            if ($this->totalKodeTransaksi !== $this->totalNomorBukti) throw new Exception('Data tidak sesuai');
 
             $result = TbData::where('id_rekon', $this->rekon->id_rekon)->first();
 
@@ -110,15 +120,9 @@ class Index extends Component
             Rekon::where('id_rekon', $this->rekon->id_rekon)->delete();
             Bkubud::where('no_bukti', $this->bkubud->no_bukti)->delete();
 
-            return redirect()->route('entry.index')->with([
-                'type' => 'success',
-                'status' => 'Data berhasil disimpan'
-            ]);
+            $this->dispatch('total-match', message: 'Data berhasil disimpan', type: 'success', title: 'Berhasil');
         } catch (\Throwable $th) {
-            return redirect()->route('entry.index')->with([
-                'type' => 'error',
-                'status' => $th->getMessage(),
-            ]);
+            $this->dispatch('total-match', message: $th->getMessage(), type: 'error', title: 'Gagal');
         }
     }
 

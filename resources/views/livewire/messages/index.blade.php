@@ -18,7 +18,7 @@
             </li>
             @empty
             <li class="flex flex-col px-10 py-5 mb-5 bg-zinc-800 rounded-xl">
-                <h3 class="text-2xl text-center text-white dark:text-white">No Messages</h3>
+                <h3 class="text-2xl text-center text-white dark:text-white">Tidak ada pesan.</h3>
             </li>
             @endforelse
         </ul>

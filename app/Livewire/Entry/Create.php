@@ -4,8 +4,10 @@ namespace App\Livewire\Entry;
 
 use App\Imports\BkubudImport;
 use App\Imports\RekonImport;
+use App\Imports\TarikDataKkImport;
 use App\Models\Bkubud;
 use App\Models\Rekon;
+use App\Models\TarikDataKk;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Maatwebsite\Excel\Facades\Excel;
@@ -13,6 +15,7 @@ use Maatwebsite\Excel\Facades\Excel;
 class Create extends Component
 {
     use WithFileUploads;
+    public array $banyakFile = [];
     public $rekon, $bkubud;
 
     public function render()
@@ -24,23 +27,43 @@ class Create extends Component
     {
         try {
             $this->validate([
-                'rekon' => 'required|mimes:xlsx,xls|max:2048',
+                'rekon' => 'required|mimes:xlsx,xls|max:10024',
             ], [
                 'rekon.required' => 'File tidak boleh kosong.',
                 'rekon.mimes' => 'File harus berupa xlsx, atau xls.',
-                'rekon.max' => 'Ukuran file maksimal 2 MB.',
+                'rekon.max' => 'Ukuran file maksimal 10 MB.',
             ]);
-            Rekon::truncate();
+            // Rekon::truncate();
             Excel::import(new RekonImport(), $this->rekon);
-            return redirect()->route('entry.index')->with([
-                'type' => 'success',
-                'status' => 'Data Rekon Berhasil Diupload'
+            $this->dispatch('notif', message: 'Data Rekon Berhasil Diupload', type: 'success', title: 'Berhasil');
+            $this->reset();
+        } catch (\Throwable $e) {
+            $this->dispatch('notif', message: $e->getMessage(), type: 'error', title: 'Gagal');
+        }
+    }
+
+    public function test()
+    {
+        try {
+            $this->validate([
+                'banyakFile' => 'required|max:10024',
+            ], [
+                'banyakFile.required' => 'File tidak boleh kosong.',
+                'banyakFile.max' => 'Ukuran file maksimal 10 MB.',
             ]);
-        } catch (\Throwable $th) {
-            return redirect()->route('entry.create')->with([
-                'type' => 'error',
-                'status' => $th->getMessage()
-            ]);
+            // (new UsersImport)->queue('users.xlsx');
+
+            // dd($this->banyakFile);
+
+            // TarikDataKk::where('kd_skpd', '01.02.01.00.001')->delete();
+            // TarikDataKk::truncate();
+            foreach ($this->banyakFile as $file) {
+                Excel::queueImport(new TarikDataKkImport(), $file);
+            }
+            // $this->reset();
+            $this->dispatch('notif', message: 'Berhasil Diupload', type: 'success', title: 'Berhasil');
+        } catch (\Throwable $e) {
+            $this->dispatch('notif', message: $e->getMessage(), type: 'error', title: 'Gagal');
         }
     }
 
@@ -56,15 +79,10 @@ class Create extends Component
             ]);
             Bkubud::truncate();
             Excel::import(new BkubudImport(), $this->bkubud);
-            return redirect()->route('entry.index')->with([
-                'type' => 'success',
-                'status' => 'Data BKUBUD Berhasil Diupload'
-            ]);
-        } catch (\Throwable $th) {
-            return redirect()->route('entry.create')->with([
-                'type' => 'error',
-                'status' => $th->getMessage(),
-            ]);
+            $this->dispatch('notif', message: 'Data BKUBUD Berhasil Diupload', type: 'success', title: 'Berhasil');
+            $this->reset();
+        } catch (\Throwable $e) {
+            $this->dispatch('notif', message: $e->getMessage(), type: 'error', title: 'Gagal');
         }
     }
 }

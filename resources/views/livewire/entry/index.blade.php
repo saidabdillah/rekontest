@@ -17,15 +17,16 @@
                 <flux:input label="Tanggal Transaksi" type="date" wire:model="tanggal" autofocus
                     wire:change="cariTanggal" />
 
-                <flux:select wire:model="kode_transaksi" label="Kode Transaksi" placholder="Pilih Kode Transaksi">
-                    <flux:select.option>Pilih Kode Transaksi</flux:select.option>
-                    @forelse ($kodeTransaksi as $kode)
-                    <flux:select.option>{{ $kode->kode_transaksi . ' ' . $kode->tanggal . ' ' . $kode->pengeluaran}}
-                    </flux:select.option>
-                    @empty
-                    <flux:select.option>Tidak Ada</flux:select.option>
-                    @endforelse
+                <flux:select wire:model="kode_transaksi" wire:change="pilihRekon($event.target.value)">
+                    <flux:select.option selected value="">Pilih Kode Transaksi</flux:select.option>
+                    @foreach ($kodeTransaksi as $kode)
+                    <flux:select.option value="{{ $kode->kode_transaksi }}">{{
+                        $kode->kode_transaksi . ' ' .
+                        $kode->tanggal . ' ' . $kode->pengeluaran }}</flux:select.option>
+                    @endforeach
                 </flux:select>
+
+
                 <div class="flex">
                     <flux:spacer />
                     <flux:button type="submit" variant="primary">Cari</flux:button>
@@ -84,15 +85,18 @@
                         </div>
                         <div x-data>
                             <flux:input type="search" autofocus wire:model="query" placeholder="Cari BKUBUD"
-                                wire:keydown="cariBkubuds" wire:click="cariBkubuds" wire:load="cariBkubuds" />
+                                wire:keydown="cariBkubuds" wire:click="cariBkubuds" autocomplete="false"
+                                wire:load="cariBkubuds" />
 
                             <ul class="mt-2 overflow-y-auto max-h-64">
-                                @foreach($bkubuds as $item)
-                                <li class="py-1 px-3 cursor-pointer mb-2 hover:bg-zinc-100 rounded dark:hover:bg-zinc-100 dark:hover:text-black"
-                                    wire:click="cariBkubud">
+                                @forelse($bkubuds as $item)
+                                <li class="p-3 cursor-pointer mb-2 hover:text-black hover:bg-zinc-100 rounded-lg border mt-3 dark:hover:bg-zinc-100 dark:hover:text-black"
+                                    wire:click="pilihBkubud('{{  $item->no_bukti}}')">
                                     {{
                                     $item->no_bukti }}</li>
-                                @endforeach
+                                @empty
+                                <li class="cursor-pointer border-2 p-3 mt-3 rounded-lg">Tidak ada</li>
+                                @endforelse
                             </ul>
                         </div>
                         <div class="flex">
@@ -130,7 +134,7 @@
         </div>
     </section>
 
-    @can('create')
+    @canany(['create', 'view'])
     <flux:separator class="mt-10 mb-5" />
 
     <section>
@@ -143,3 +147,16 @@
     @endcan
 
 </div>
+
+@script
+<script>
+    $wire.on('total-match', (e) => {
+        Swal.fire({
+            title: e.title,
+            text: e.message,
+            icon: e.type,
+            timer: 2000
+        })
+    });
+</script>
+@endscript

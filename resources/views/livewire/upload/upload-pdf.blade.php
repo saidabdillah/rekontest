@@ -8,6 +8,7 @@
             {{-- <flux:button type="submit" variant="primary">Cari</flux:button> --}}
         </form>
     </div>
+
     <div class="overflow-x-scroll w-full">
         <table class="w-[2000px]">
             <thead>
@@ -24,7 +25,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($tb_data as $data)
+                @forelse ($tb_data as $data)
                 <tr>
                     <td>
                         {{ $loop->iteration + ($tb_data->currentPage() - 1) * $tb_data->perPage() }}
@@ -42,13 +43,17 @@
                     </td>
                     @else
                     <td class="text-center">
-                        <flux:modal.trigger name="uploadPdf-{{ $data->id }}">
+                        <flux:modal.trigger :name="'uploadPdf-' . $data->id">
                             <flux:button variant="primary" class="cursor-pointer">Upload Pdf</flux:button>
                         </flux:modal.trigger>
                     </td>
                     @endif
                 </tr>
-                @endforeach
+                @empty
+                <tr>
+                    <td colspan="9" class="text-center">Tidak Ada</td>
+                </tr>
+                @endforelse
             </tbody>
         </table>
     </div>
@@ -61,7 +66,7 @@
 
 
     @foreach ($tb_data as $data)
-    <flux:modal name="uploadPdf-{{ $data->id }}" class="md:w-96">
+    <flux:modal :name="'uploadPdf-' . $data->id" class="md:w-96">
         <form class="space-y-6" wire:submit="uploadPdf({{ $data->id }})">
             <div>
                 <flux:heading size="lg">Upload PDF</flux:heading>
@@ -77,3 +82,16 @@
     </flux:modal>
     @endforeach
 </div>
+
+@script
+<script>
+    $wire.on('uploadPdf', (e) => {
+        Swal.fire({
+            title: e.title,
+            text: e.message,
+            icon: e.type,
+            timer: 2000
+        })
+})
+</script>
+@endscript

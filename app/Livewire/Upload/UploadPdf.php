@@ -36,15 +36,11 @@ class UploadPdf extends Component
             $tb_data->file_path = $this->pathPdf;
             $tb_data->save();
 
-            return redirect()->route('upload.pdf')->with([
-                'type' => 'success',
-                'status' => 'File Pdf berhasil diupload',
-            ]);
+            $this->modal('uploadPdf-' . $id)->close();
+            $this->dispatch('uploadPdf', message: 'Upload file PDF berhasil', type: 'success', title: 'Berhasil');
         } catch (\Throwable $th) {
-            return redirect()->route('upload.pdf')->with([
-                'type' => 'error',
-                'status' => $th->getMessage(),
-            ]);
+            $this->modal('uploadPdf-' . $id)->close();
+            $this->dispatch('uploadPdf', message: $th->getMessage(), type: 'error', title: 'Gagal');
         }
     }
 

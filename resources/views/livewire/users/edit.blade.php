@@ -13,6 +13,6 @@
             <flux:checkbox label="{{ $permission->name }}" value="{{ $permission->name }}" />
             @endforeach
         </flux:checkbox.group>
-        <flux:button wire:click="save({{ $user->id }})">Save</flux:button>
+        <flux:button wire:click="save({{ $user->id }})">Simpan</flux:button>
     </div>
 </div>

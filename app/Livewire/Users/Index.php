@@ -2,9 +2,12 @@
 
 namespace App\Livewire\Users;
 
+use App\Mail\SendEmailUserVerified;
 use App\Models\User;
+use App\Notifications\SendEmailHasVerifUser;
 use Carbon\Carbon;
 use Flux\Flux;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
@@ -48,6 +51,7 @@ class Index extends Component
 
         session()->flash('type', 'success');
         session()->flash('status', "{$user->name} berhasil diverifikasi.");
+        Mail::to($user->email)->send(new SendEmailUserVerified($user));
 
         Flux::modals()->close();
         return redirect()->route('users.index');

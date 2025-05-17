@@ -22,7 +22,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($users as $user)
+                @forelse ($users as $user)
                 <tr>
                     <td>{{ $loop->iteration + ($users->currentPage() - 1) * $users->perPage() }}</td>
                     <td>{{ $user->name }}</td>
@@ -30,29 +30,8 @@
                     @if (is_null($user->email_verified_at))
                     <td class="text-center">
                         <flux:modal.trigger name="verifikasi-user-{{$user->id}}">
-                            <flux:button>Belum Diverifikasi</flux:button>
+                            <flux:button class="cursor-pointer">Belum Diverifikasi</flux:button>
                         </flux:modal.trigger>
-                        <flux:modal name="verifikasi-user-{{$user->id}}" class="min-w-[26rem] text-left">
-                            <div class="space-y-6">
-                                <div>
-                                    <flux:heading size="lg">Apakah Anda Yakin Ingin Memverifikasi </br> {{ $user->name
-                                        }} ?
-                                    </flux:heading>
-                                    <flux:text class="mt-2">
-                                        <p>You're about to delete this project.</p>
-                                        <p>This action cannot be reversed.</p>
-                                    </flux:text>
-                                </div>
-                                <div class="flex gap-2">
-                                    <flux:spacer />
-                                    <flux:modal.close>
-                                        <flux:button variant="ghost">Cancel</flux:button>
-                                    </flux:modal.close>
-                                    <flux:button variant="filled" wire:click="verifyUser({{ $user->id }})">
-                                        Aktifkan</flux:button>
-                                </div>
-                            </div>
-                        </flux:modal>
                     </td>
                     @else
                     <td class="text-center">
@@ -64,13 +43,43 @@
                         </flux:button>
                     </td>
                 </tr>
-                @endforeach
+                @empty
+                <tr>
+                    <td colspan="5" class="text-center">Tidak ada</td>
+                </tr>
+                @endforelse
             </tbody>
         </table>
     </section>
 
     {{-- Pagination --}}
-    <div class="mt-10 w-96">
+    <div class="mt-10 w-full lg:w-96">
         {{ $users->links() }}
     </div>
+
+
+
+    @foreach ($users as $user)
+    <flux:modal name="verifikasi-user-{{$user->id}}" class="min-w-[26rem] text-left">
+        <div class="space-y-6">
+            <div>
+                <flux:heading size="lg">Apakah Anda Yakin Ingin Memverifikasi </br> {{ $user->name
+                    }} ?
+                </flux:heading>
+                <flux:text class="mt-2">
+                    <p>Lorem ipsum dolor sit amet.</p>
+                    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit.</p>
+                </flux:text>
+            </div>
+            <div class="flex gap-2">
+                <flux:spacer />
+                <flux:modal.close>
+                    <flux:button variant="ghost">Kembali</flux:button>
+                </flux:modal.close>
+                <flux:button variant="filled" wire:click="verifyUser({{ $user->id }})">
+                    Aktifkan</flux:button>
+            </div>
+        </div>
+    </flux:modal>
+    @endforeach
 </div>
