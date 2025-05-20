@@ -35,28 +35,38 @@
         </flux:navlist>
         @endrole
 
+        @if(auth()->user()->can('view') || auth()->user()->can('create'))
         <flux:navlist variant="outline">
             <flux:navlist.group :heading="__('Laporan')" class="grid">
                 <flux:navlist.group expandable heading="Rekonsialisasi" class="grid">
-                    @can('view')
                     <flux:navlist.item icon="clipboard" :href="route('entry.index')"
                         :current="request()->routeIs('entry.index')" wire:navigate>{{ __('Entry') }}</flux:navlist.item>
-                    @endcan
-                    @can('create')
                     <flux:navlist.item icon="plus" :href="route('entry.create')"
                         :current="request()->routeIs('entry.create')" wire:navigate>{{ __('Tambah Entry') }}
                     </flux:navlist.item>
-                    @endcan
                 </flux:navlist.group>
             </flux:navlist.group>
         </flux:navlist>
+        @endif
 
+        {{-- @can('view') --}}
+        @if(auth()->user()->can('view') || auth()->user()->can('create'))
         <flux:navlist variant="outline">
             <flux:navlist.group :heading="__('Cetak')" class="grid">
-                <flux:navlist.item icon="printer" :href="route('upload.pdf')"
-                    :current="request()->routeIs('upload.pdf')" wire:navigate>{{ __('Upload PDF') }}</flux:navlist.item>
+                <flux:navlist.group expandable heading="Rekonsialisasi" class="grid">
+                    <flux:navlist.item icon="printer" :href="route('cetak.rekonsiliasi')"
+                        :current="request()->routeIs('cetak.rekonsiliasi')" wire:navigate>{{ __('Cetak
+                        Rekonsiliasi') }}
+                    </flux:navlist.item>
+                    <flux:navlist.item icon="arrow-path-rounded-square" :href="route('rekap')"
+                        :current="request()->routeIs('rekap')" wire:navigate>{{ __('Rekap') }}
+                    </flux:navlist.item>
+                </flux:navlist.group>
             </flux:navlist.group>
         </flux:navlist>
+        @endif
+        {{-- @endcan --}}
+
 
         <flux:spacer />
 
@@ -153,6 +163,19 @@
     @fluxScripts
     @stack('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('livewire:init', () => {
+            Livewire.on('notif', (e) => {
+                Swal.fire({
+                    title: e.title,
+                    text: e.message,
+                    icon: e.type,
+                    timer: 2000
+                })
+            });
+        });
+    </script>
+    </script>
 </body>
 
 </html>

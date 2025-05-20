@@ -20,9 +20,7 @@
                 <flux:select wire:model="kode_transaksi" wire:change="pilihRekon($event.target.value)">
                     <flux:select.option selected value="">Pilih Kode Transaksi</flux:select.option>
                     @foreach ($kodeTransaksi as $kode)
-                    <flux:select.option value="{{ $kode->kode_transaksi }}">{{
-                        $kode->kode_transaksi . ' ' .
-                        $kode->tanggal . ' ' . $kode->pengeluaran }}</flux:select.option>
+                    <flux:select.option value="{{ $kode->kode_transaksi }}">{{ $kode->id_rekon }}</flux:select.option>
                     @endforeach
                 </flux:select>
 
@@ -147,16 +145,3 @@
     @endcan
 
 </div>
-
-@script
-<script>
-    $wire.on('total-match', (e) => {
-        Swal.fire({
-            title: e.title,
-            text: e.message,
-            icon: e.type,
-            timer: 2000
-        })
-    });
-</script>
-@endscript

@@ -11,13 +11,13 @@ Route::get('/', function () {
 })->name('home');
 
 // Users
-Route::prefix('users')->group(function () {
+Route::prefix('pengguna')->group(function () {
     Route::middleware('role:super admin', 'auth')->group(function () {
         Route::view('/', 'users')
             ->name('users.index');
         Route::get('/edit/{user:name}', Edit::class)
             ->name('user.edit');
-        Route::view('/messages', 'messages')
+        Route::view('/pesan', 'messages')
             ->name('messages.index');
     });
 });
@@ -28,20 +28,23 @@ Route::prefix('entry')->group(function () {
     Route::group(['middleware' => ['can:view', 'auth']], function () {
         Route::view('/', 'entry')
             ->name('entry.index');
-        Route::view('/upload-pdf', 'upload-pdf')
-            ->name('upload.pdf');
     });
-
     Route::group(['middleware' => ['can:create', 'auth']], function () {
-        Route::view('/create', 'create-entry')
+        Route::view('/tambah', 'create-entry')
             ->name('entry.create');
     });
 });
 
+// Cetak
+Route::prefix('cetak')->group(function () {
+    Route::group(['middleware' => ['permission:view|create', 'auth']], function () {
+        Route::view('/rekonsiliasi', 'cetak-rekonsiliasi')
+            ->name('cetak.rekonsiliasi');
+        Route::view('/rekap', 'rekap')->name('rekap');
+    });
+});
 
-
-
-
+// Dashboard
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');

@@ -6,7 +6,6 @@
         <form class="flex gap-x-5">
             <flux:input icon="magnifying-glass" type="search" wire:input.debounce.150ms="cariUser" wire:model="user"
                 wire:keydown.debounce.300ms="cariUser" placeholder="Cari..." />
-            {{-- <flux:button type="submit" variant="primary">Cari</flux:button> --}}
         </form>
     </div>
 
@@ -66,10 +65,10 @@
                 <flux:heading size="lg">Apakah Anda Yakin Ingin Memverifikasi </br> {{ $user->name
                     }} ?
                 </flux:heading>
-                <flux:text class="mt-2">
+                {{-- <flux:text class="mt-2">
                     <p>Lorem ipsum dolor sit amet.</p>
                     <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit.</p>
-                </flux:text>
+                </flux:text> --}}
             </div>
             <div class="flex gap-2">
                 <flux:spacer />
@@ -77,7 +76,7 @@
                     <flux:button variant="ghost">Kembali</flux:button>
                 </flux:modal.close>
                 <flux:button variant="filled" wire:click="verifyUser({{ $user->id }})">
-                    Aktifkan</flux:button>
+                    Verifikasi</flux:button>
             </div>
         </div>
     </flux:modal>

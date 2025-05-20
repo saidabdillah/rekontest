@@ -50,6 +50,7 @@ class Index extends Component
         $this->kodeTransaksi = Rekon::where('tanggal', $this->tanggal)->get();
     }
 
+    #[On('notif')]
     public function cariRekon()
     {
         try {
@@ -61,6 +62,7 @@ class Index extends Component
         }
     }
 
+    #[On('notif')]
     public function pilihRekon($rekon)
     {
         try {
@@ -72,6 +74,7 @@ class Index extends Component
         }
     }
 
+    #[On('notif')]
     public function mount()
     {
         $this->nomorBukti = Bkubud::all()->pluck('no_bukti')->toArray();
@@ -82,6 +85,7 @@ class Index extends Component
     {
         try {
             $this->bkubud = Bkubud::where('no_bukti', 'like', '%' . $this->query . '%')->first();
+            if (!$this->bkubud) throw new Exception('Data tidak ditemukan');
             $this->totalNomorBukti = $this->bkubud->penerimaan + $this->bkubud->pengeluaran;
 
             if ($this->totalKodeTransaksi !== $this->totalNomorBukti) {
@@ -93,7 +97,7 @@ class Index extends Component
             $this->modal('lihat-bkubud')->close();
         } catch (\Throwable $th) {
             $this->modal('lihat-bkubud')->close();
-            $this->dispatch('total-match', message: $th->getMessage(), type: 'error', title: 'Gagal');
+            $this->dispatch('notif', message: $th->getMessage(), type: 'error', title: 'Gagal');
         }
     }
 
@@ -120,9 +124,10 @@ class Index extends Component
             Rekon::where('id_rekon', $this->rekon->id_rekon)->delete();
             Bkubud::where('no_bukti', $this->bkubud->no_bukti)->delete();
 
-            $this->dispatch('total-match', message: 'Data berhasil disimpan', type: 'success', title: 'Berhasil');
+            $this->reset();
+            $this->dispatch('notif', message: 'Data berhasil disimpan', type: 'success', title: 'Berhasil');
         } catch (\Throwable $th) {
-            $this->dispatch('total-match', message: $th->getMessage(), type: 'error', title: 'Gagal');
+            $this->dispatch('notif', message: $th->getMessage(), type: 'error', title: 'Gagal');
         }
     }
 

@@ -4,8 +4,7 @@
 
     <div class="w-fit mb-5">
         <form class="flex gap-x-5">
-            <flux:input icon="magnifying-glass" type="search" wire:model.live="cari" placeholder="Cari..." />
-            {{-- <flux:button type="submit" variant="primary">Cari</flux:button> --}}
+            <flux:input icon="magnifying-glass" type="search" wire:model.debounce.150ms="cari" placeholder="Cari..." />
         </form>
     </div>
 
@@ -82,16 +81,3 @@
     </flux:modal>
     @endforeach
 </div>
-
-@script
-<script>
-    $wire.on('uploadPdf', (e) => {
-        Swal.fire({
-            title: e.title,
-            text: e.message,
-            icon: e.type,
-            timer: 2000
-        })
-})
-</script>
-@endscript

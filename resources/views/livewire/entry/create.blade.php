@@ -9,31 +9,24 @@
         </div>
         <div class="grid gap-4 sm:w-1/2 xl:w-1/3 items-end">
             <flux:input type="file" wire:model="bkubud" accept=".xlsx,xls" label="BKUBUD" />
-            <flux:button variant="primary" wire:click="uploadBKUBUD">Upload</flux:button>
+            <flux:button variant="primary" wire:click="uploadBKUBUD">Upload BKUBUD</flux:button>
         </div>
+
         <div class="grid gap-4 sm:w-1/2 xl:w-1/3 items-end">
-            <flux:input type="file" wire:model="banyakFile" label="SKPD" accept=".xlsx,xls" multiple />
-            <flux:button variant="primary" wire:click="test">Upload</flux:button>
+            <flux:input type="file" wire:model="banyakFile" label="SKPD" accept=".xlsx,xls" />
+            <flux:button variant="primary" wire:click="uploadSkpd">Upload SKPD</flux:button>
         </div>
-        {{-- <form>
-            <div class="grid gap-4 sm:w-1/2 xl:w-1/3 items-end">
-                <flux:input type="file" wire:model="logo" label="Lorem Ipsum" />
-                <flux:button variant="primary">Upload</flux:button>
-            </div>
-        </form> --}}
+
+        <div class="grid gap-4 sm:w-1/2 xl:w-1/3 items-end">
+            <flux:input type="file" wire:model="sub_unit" accept=".xlsx,xls" label="Sub Unit" />
+            <flux:button variant="primary" wire:click="uploadSubUnit">Upload Sub Unit</flux:button>
+        </div>
+
+        <div class="grid gap-4 sm:w-1/2 xl:w-1/3 items-end">
+            <flux:input type="file" wire:model="sub_unit" accept=".xlsx,xls" label="Sub Unit" />
+            <flux:button variant="primary" wire:click="uploadSubUnit">Upload Sub Unit</flux:button>
+        </div>
+
         <form>
     </section>
 </div>
-
-@script
-<script>
-    $wire.on('notif', (e) => {
-        Swal.fire({
-            title: e.title,
-            text: e.message,
-            icon: e.type,
-            timer: 2000
-        })
-});
-</script>
-@endscript

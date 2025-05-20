@@ -10,6 +10,7 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
+
 class RekonImport implements ToCollection, WithHeadingRow, WithCalculatedFormulas, WithMultipleSheets
 {
     public function sheets(): array
@@ -21,6 +22,7 @@ class RekonImport implements ToCollection, WithHeadingRow, WithCalculatedFormula
 
     public function collection(Collection $rows)
     {
+
         foreach ($rows as $row) {
             $tanggal = Date::excelToDateTimeObject($row['tanggal'])->format('Y-m-d');
             $id_rekon = $row['kode_transaksi'] . '-' .  $tanggal . '-' . $row['penerimaan'] . '-' . $row['pengeluaran'];
