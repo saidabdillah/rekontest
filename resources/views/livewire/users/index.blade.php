@@ -38,8 +38,9 @@
                     </td>
                     @endif
                     <td class="text-center">
-                        <flux:button href="{{ route('user.edit', $user) }}" wire:navigate>Edit
-                        </flux:button>
+                        <flux:modal.trigger name="delete-user-{{ $user->id }}">
+                            <flux:button variant="danger">Hapus</flux:button>
+                        </flux:modal.trigger>
                     </td>
                 </tr>
                 @empty
@@ -77,6 +78,30 @@
                 </flux:modal.close>
                 <flux:button variant="filled" wire:click="verifyUser({{ $user->id }})">
                     Verifikasi</flux:button>
+            </div>
+        </div>
+    </flux:modal>
+    @endforeach
+
+    @foreach ($users as $user)
+    <flux:modal name="delete-user-{{$user->id}}" class="min-w-[26rem] text-left">
+        <div class="space-y-6">
+            <div>
+                <flux:heading size="lg">Apakah Anda Yakin Ingin Menghapus </br> {{ $user->name
+                    }} ?
+                </flux:heading>
+                {{-- <flux:text class="mt-2">
+                    <p>Lorem ipsum dolor sit amet.</p>
+                    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit.</p>
+                </flux:text> --}}
+            </div>
+            <div class="flex gap-2">
+                <flux:spacer />
+                <flux:modal.close>
+                    <flux:button variant="ghost">Kembali</flux:button>
+                </flux:modal.close>
+                <flux:button variant="danger" wire:click="deleteUser({{ $user->id }})">
+                    Hapus</flux:button>
             </div>
         </div>
     </flux:modal>

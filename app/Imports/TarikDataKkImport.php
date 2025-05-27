@@ -3,12 +3,14 @@
 namespace App\Imports;
 
 use App\Models\TarikDataKk;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
-class TarikDataKkImport implements ToCollection, WithMultipleSheets, WithHeadingRow
+class TarikDataKkImport implements ToCollection, WithMultipleSheets, WithHeadingRow, ShouldQueue, WithChunkReading
 {
     /**
      * @param array $row
@@ -25,9 +27,7 @@ class TarikDataKkImport implements ToCollection, WithMultipleSheets, WithHeading
 
     public function collection(Collection $rows)
     {
-        $apa = TarikDataKk::where('kd_skpd', '=', $rows[0]['kd_skpd'])->first();
-
-        if (isset($apa)) {
+        if (isset($rows)) {
             TarikDataKk::where('kd_skpd', '=', $rows[0]['kd_skpd'])->delete();
         }
 
@@ -63,5 +63,10 @@ class TarikDataKkImport implements ToCollection, WithMultipleSheets, WithHeading
                 'nilai_pengembalian_nihil' => $row['nilai_pengembalian_nihil']
             ]);
         }
+    }
+
+    public function chunkSize(): int
+    {
+        return 1000;
     }
 }

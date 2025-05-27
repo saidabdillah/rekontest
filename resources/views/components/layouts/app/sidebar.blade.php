@@ -35,7 +35,6 @@
         </flux:navlist>
         @endrole
 
-        @if(auth()->user()->can('view') || auth()->user()->can('create'))
         <flux:navlist variant="outline">
             <flux:navlist.group :heading="__('Laporan')" class="grid">
                 <flux:navlist.group expandable heading="Rekonsialisasi" class="grid">
@@ -47,10 +46,7 @@
                 </flux:navlist.group>
             </flux:navlist.group>
         </flux:navlist>
-        @endif
 
-        {{-- @can('view') --}}
-        @if(auth()->user()->can('view') || auth()->user()->can('create'))
         <flux:navlist variant="outline">
             <flux:navlist.group :heading="__('Cetak')" class="grid">
                 <flux:navlist.group expandable heading="Rekonsialisasi" class="grid">
@@ -61,11 +57,12 @@
                     <flux:navlist.item icon="arrow-path-rounded-square" :href="route('rekap')"
                         :current="request()->routeIs('rekap')" wire:navigate>{{ __('Rekap') }}
                     </flux:navlist.item>
+                    <flux:navlist.item icon="chart-bar" :href="route('laporan')"
+                        :current="request()->routeIs('laporan')" wire:navigate>{{ __('Perbandingan') }}
+                    </flux:navlist.item>
                 </flux:navlist.group>
             </flux:navlist.group>
         </flux:navlist>
-        @endif
-        {{-- @endcan --}}
 
 
         <flux:spacer />
@@ -161,8 +158,9 @@
 
 
     @fluxScripts
-    @stack('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    @stack('scripts')
     <script>
         document.addEventListener('livewire:init', () => {
             Livewire.on('notif', (e) => {

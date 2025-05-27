@@ -3,15 +3,15 @@
 namespace App\Imports;
 
 use App\Models\Rekon;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
-use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
+use Maatwebsite\Excel\Concerns\WithBatchInserts;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
-
-class RekonImport implements ToCollection, WithHeadingRow, WithCalculatedFormulas, WithMultipleSheets
+class RekonImport implements ToCollection, WithHeadingRow, ShouldQueue, WithChunkReading, WithBatchInserts
 {
     public function sheets(): array
     {
@@ -22,6 +22,7 @@ class RekonImport implements ToCollection, WithHeadingRow, WithCalculatedFormula
 
     public function collection(Collection $rows)
     {
+        if (isset($rows)) Rekon::truncate();
 
         foreach ($rows as $row) {
             $tanggal = Date::excelToDateTimeObject($row['tanggal'])->format('Y-m-d');
@@ -39,30 +40,13 @@ class RekonImport implements ToCollection, WithHeadingRow, WithCalculatedFormula
         }
     }
 
-    public function rules(): array
+    public function batchSize(): int
     {
-        return [
-            'id_rekon' => ['required'],
-            'hal' => ['required'],
-            'urut' => ['required'],
-            'tanggal' => ['required'],
-            'kode_transaksi' => ['required'],
-            'penerimaan' => ['required'],
-            'pengeluaran' => ['required'],
-            'uraian' => ['required'],
-        ];
+        return 1000;
     }
 
-    public function customValidationMessages()
+    public function chunkSize(): int
     {
-        return [
-            '*.id_rekon.required' => 'Id Rekon tidak boleh kosong.',
-            '*.hal.required' => 'Hal tidak boleh kosong.',
-            '*.urut.required' => 'Urut tidak boleh kosong.',
-            '*.tanggal.required' => 'Tanggal tidak boleh kosong.',
-            '*.penerimaan.required' => 'Penerimaan tidak boleh kosong.',
-            '*.pengeluaran.required' => 'Pengeluaran tidak boleh kosong.',
-            '*.uraian.required' => 'Uraian tidak boleh kosong.',
-        ];
+        return 1000;
     }
 }

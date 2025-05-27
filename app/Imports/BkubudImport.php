@@ -3,16 +3,15 @@
 namespace App\Imports;
 
 use App\Models\Bkubud;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\ToCollection;
-use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
-use Maatwebsite\Excel\Concerns\WithValidation;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
-class BkubudImport implements ToCollection, WithHeadingRow, WithCalculatedFormulas, WithMultipleSheets, WithValidation
+class BkubudImport implements ToCollection, WithHeadingRow, WithMultipleSheets, ShouldQueue, WithChunkReading
 {
     public function sheets(): array
     {
@@ -23,6 +22,8 @@ class BkubudImport implements ToCollection, WithHeadingRow, WithCalculatedFormul
 
     public function collection(Collection $rows)
     {
+        if (isset($rows)) Bkubud::truncate();
+
         foreach ($rows as $row) {
             $tanggal = Date::excelToDateTimeObject($row['tanggal'])->format('Y-m-d');
             Bkubud::create([
@@ -35,24 +36,8 @@ class BkubudImport implements ToCollection, WithHeadingRow, WithCalculatedFormul
         }
     }
 
-    public function rules(): array
+    public function chunkSize(): int
     {
-        return [
-            'tanggal' => ['required'],
-            'no_bukti' => ['required'],
-            'penerimaan' => ['required'],
-            'pengeluaran' => ['required'],
-            'uraian' => ['required'],
-        ];
-    }
-
-    public function customValidationMessages()
-    {
-        return [
-            '*.tanggal.required' => 'Tanggal tidak boleh kosong.',
-            '*.no_bukti.required' => 'No bukti tidak boleh kosong.',
-            '*.penerimaan.required' => 'Penerimaan tidak boleh kosong.',
-            '*.pengeluaran.required' => 'Pengeluaran tidak boleh kosong.',
-        ];
+        return 1000;
     }
 }

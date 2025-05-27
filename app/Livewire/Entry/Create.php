@@ -3,13 +3,11 @@
 namespace App\Livewire\Entry;
 
 use App\Imports\BkubudImport;
+use App\Imports\RegSp2dImport;
+use App\Imports\RegSpbImport;
 use App\Imports\RekonImport;
 use App\Imports\SubUnitImport;
 use App\Imports\TarikDataKkImport;
-use App\Models\Bkubud;
-use App\Models\Rekon;
-use App\Models\TarikDataKk;
-use App\Models\tb_sub_unit;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Maatwebsite\Excel\Facades\Excel;
@@ -17,9 +15,11 @@ use Maatwebsite\Excel\Facades\Excel;
 class Create extends Component
 {
     use WithFileUploads;
-    public $banyakFile;
+    public $skpd;
     public $rekon, $bkubud;
     public $sub_unit;
+    public $reg_sp2d;
+    public $reg_spb;
 
     public function render()
     {
@@ -36,8 +36,7 @@ class Create extends Component
                 'rekon.mimes' => 'File harus berupa xlsx, atau xls.',
                 'rekon.max' => 'Ukuran file maksimal 10 MB.',
             ]);
-            Rekon::truncate();
-            Excel::import(new RekonImport(), $this->rekon);
+            Excel::queueImport(new RekonImport, $this->rekon);
             $this->dispatch('notif', message: 'Data Rekon Berhasil Diupload', type: 'success', title: 'Berhasil');
             $this->reset();
         } catch (\Throwable $e) {
@@ -49,14 +48,12 @@ class Create extends Component
     {
         try {
             $this->validate([
-                'banyakFile' => 'required|max:10024',
+                'skpd' => 'required|max:10024',
             ], [
-                'banyakFile.required' => 'File tidak boleh kosong.',
-                'banyakFile.max' => 'Ukuran file maksimal 10 MB.',
+                'skpd.required' => 'File tidak boleh kosong.',
+                'skpd.max' => 'Ukuran file maksimal 10 MB.',
             ]);
-            // foreach ($this->banyakFile as $file) {
-            Excel::import(new TarikDataKkImport(), $this->banyakFile);
-            // }
+            Excel::queueImport(new TarikDataKkImport, $this->skpd);
             $this->reset();
             $this->dispatch('notif', message: 'Berhasil Diupload', type: 'success', title: 'Berhasil');
         } catch (\Throwable $e) {
@@ -74,8 +71,7 @@ class Create extends Component
                 'bkubud.mimes' => 'File harus berupa xlsx, atau xls.',
                 'bkubud.max' => 'Ukuran file maksimal 2 MB.',
             ]);
-            Bkubud::truncate();
-            Excel::import(new BkubudImport(), $this->bkubud);
+            Excel::queueImport(new BkubudImport, $this->bkubud);
             $this->dispatch('notif', message: 'Data BKUBUD Berhasil Diupload', type: 'success', title: 'Berhasil');
             $this->reset();
         } catch (\Throwable $e) {
@@ -93,9 +89,44 @@ class Create extends Component
                 'sub_unit.mimes' => 'File harus berupa xlsx, atau xls.',
                 'sub_unit.max' => 'Ukuran file maksimal 2 MB.',
             ]);
-            tb_sub_unit::truncate();
-            Excel::import(new SubUnitImport(), $this->sub_unit);
+            Excel::queueImport(new SubUnitImport, $this->sub_unit);
             $this->dispatch('notif', message: 'Data Sub Unit Berhasil Diupload', type: 'success', title: 'Berhasil');
+            $this->reset();
+        } catch (\Throwable $e) {
+            $this->dispatch('notif', message: $e->getMessage(), type: 'error', title: 'Gagal');
+        }
+    }
+
+    public function uploadRegSp2d()
+    {
+        try {
+            $this->validate([
+                'reg_sp2d' => 'required|mimes:xlsx,xls|max:2048',
+            ], [
+                'reg_sp2d.required' => 'File tidak boleh kosong.',
+                'reg_sp2d.mimes' => 'File harus berupa xlsx, atau xls.',
+                'reg_sp2d.max' => 'Ukuran file maksimal 2 MB.',
+            ]);
+            Excel::queueImport(new RegSp2dImport, $this->reg_sp2d);
+            $this->dispatch('notif', message: 'Data Reg SP2D Berhasil Diupload', type: 'success', title: 'Berhasil');
+            $this->reset();
+        } catch (\Throwable $e) {
+            $this->dispatch('notif', message: $e->getMessage(), type: 'error', title: 'Gagal');
+        }
+    }
+
+    public function uploadRegSpb()
+    {
+        try {
+            $this->validate([
+                'reg_spb' => 'required|mimes:xlsx,xls|max:2048',
+            ], [
+                'reg_spb.required' => 'File tidak boleh kosong.',
+                'reg_spb.mimes' => 'File harus berupa xlsx, atau xls.',
+                'reg_spb.max' => 'Ukuran file maksimal 2 MB.',
+            ]);
+            Excel::queueImport(new RegSpbImport, $this->reg_spb);
+            $this->dispatch('notif', message: 'Data Reg SPB Berhasil Diupload', type: 'success', title: 'Berhasil');
             $this->reset();
         } catch (\Throwable $e) {
             $this->dispatch('notif', message: $e->getMessage(), type: 'error', title: 'Gagal');

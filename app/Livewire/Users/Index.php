@@ -4,9 +4,9 @@ namespace App\Livewire\Users;
 
 use App\Mail\SendEmailUserVerified;
 use App\Models\User;
-use App\Notifications\SendEmailHasVerifUser;
 use Carbon\Carbon;
 use Flux\Flux;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 use Livewire\WithoutUrlPagination;
@@ -20,11 +20,7 @@ class Index extends Component
 
     public function render()
     {
-        $users = User::nonAdmin()->when(
-            $this->user,
-            fn($query) =>
-            $query->where('name', 'like', '%' . $this->user . '%')
-        )
+        $users = User::whereNotIn('name', ['admin'])
             ->latest()
             ->paginate(1);
 
@@ -37,11 +33,6 @@ class Index extends Component
         $this->data = User::where('name', 'like', '%' . $this->user . '%')->latest()->get();
     }
 
-    public function updatingUser()
-    {
-        if (!empty($this->user)) $this->resetPage();
-    }
-
     public function verifyUser($userId)
     {
         $user = User::findOrFail($userId);
@@ -49,9 +40,21 @@ class Index extends Component
         $user->email_verified_at = Carbon::now();
         $user->save();
 
-        session()->flash('type', 'success');
-        session()->flash('status', "{$user->name} berhasil diverifikasi.");
+        $this->dispatch('notif', message: 'User Berhasil Diverifikasi', type: 'success', title: 'Berhasil');
         Mail::to($user->email)->send(new SendEmailUserVerified($user));
+
+        Flux::modals()->close();
+        return redirect()->route('users.index');
+    }
+
+    public function deleteUser($userId)
+    {
+        $user = User::findOrFail($userId);
+        DB::table('notifications')->select('notifiable_id')->where('notifiable_id', $user->id)->delete();
+
+        $user->delete();
+
+        $this->dispatch('notif', message: 'User Berhasil Dihapus', type: 'success', title: 'Berhasil');
 
         Flux::modals()->close();
         return redirect()->route('users.index');

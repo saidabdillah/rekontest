@@ -4,7 +4,8 @@
 
     <div class="w-fit mb-5">
         <form class="flex gap-x-5">
-            <flux:input icon="magnifying-glass" type="search" wire:model.debounce.150ms="cari" placeholder="Cari..." />
+            <flux:input icon="magnifying-glass" type="search" wire:input.debounce.150ms="cariData" wire:model="cari"
+                placeholder="Cari..." />
         </form>
     </div>
 

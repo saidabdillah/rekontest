@@ -4,6 +4,7 @@ namespace App\Livewire\Rekap;
 
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Sum;
 
 class Rekap extends Component
 {
@@ -12,27 +13,32 @@ class Rekap extends Component
     public function mount()
     {
         $this->data = DB::table('tarik_data_kk')
-            ->select(
+            ->join('tb_sub_unit', 'tb_sub_unit.kd_sub_unit', '=', 'tarik_data_kk.kd_skpd')
+            ->select([
                 'tb_sub_unit.kd_sub_unit',
                 'tb_sub_unit.nm_sub_unit',
-                DB::raw('SUM(CAST(tarik_data_kk.pagu_anggaran AS UNSIGNED)) as total_anggaran'),
-                DB::raw('SUM(CAST(tarik_data_kk.ls AS UNSIGNED) + CAST(tarik_data_kk.up_gu_tu AS UNSIGNED)) as realisasi'),
-                DB::raw('SUM(CAST(tarik_data_kk.pagu_anggaran AS UNSIGNED)) - SUM(CAST(tarik_data_kk.ls AS UNSIGNED) + CAST(tarik_data_kk.up_gu_tu AS UNSIGNED)) as selisih'),
+                DB::raw('SUM(COALESCE(tarik_data_kk.pagu_anggaran, 0)) AS total_anggaran'),
+                DB::raw('SUM(COALESCE(tarik_data_kk.ls, 0) + COALESCE(tarik_data_kk.up_gu_tu, 0)) AS realisasi'),
+                DB::raw('SUM(COALESCE(tarik_data_kk.pagu_anggaran, 0)) - 
+                SUM(COALESCE(tarik_data_kk.ls, 0) + COALESCE(tarik_data_kk.up_gu_tu, 0)) AS selisih'),
                 DB::raw('ROUND(
-            SUM(CAST(tarik_data_kk.ls AS UNSIGNED) + CAST(tarik_data_kk.up_gu_tu AS UNSIGNED)) /
-            SUM(CAST(tarik_data_kk.pagu_anggaran AS UNSIGNED)) * 100, 2) as persentase')
-            )
-            ->leftJoin('tb_sub_unit', 'tb_sub_unit.kd_sub_unit', '=', 'tarik_data_kk.kd_skpd')
-            ->groupBy('tarik_data_kk.kd_skpd', 'tb_sub_unit.nm_sub_unit')
+                CASE 
+                    WHEN SUM(COALESCE(tarik_data_kk.pagu_anggaran, 0)) = 0 THEN 0
+                    ELSE SUM(COALESCE(tarik_data_kk.ls, 0) + COALESCE(tarik_data_kk.up_gu_tu, 0)) / 
+                         SUM(COALESCE(tarik_data_kk.pagu_anggaran, 0)) * 100
+                END, 2) AS persentase')
+            ])
+            ->groupBy('tb_sub_unit.kd_sub_unit', 'tb_sub_unit.nm_sub_unit')
             ->orderByDesc('tb_sub_unit.created_at')
             ->get();
 
-        foreach ($this->data as $data) {
-            $this->total_anggaran += $data->total_anggaran;
-            $this->realisasi += $data->realisasi;
-            $this->selisih += $data->selisih;
-            $this->persentase += $data->persentase;
-        }
+        $this->total_anggaran = $this->data->sum('total_anggaran');
+        $this->realisasi = $this->data->sum('realisasi');
+        $this->selisih = $this->total_anggaran - $this->realisasi;
+
+        $this->persentase = $this->total_anggaran > 0
+            ? round(($this->realisasi / $this->total_anggaran) * 100, 2)
+            : 0;
     }
 
     public function render()

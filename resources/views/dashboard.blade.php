@@ -2,6 +2,8 @@
     <flux:heading size="xl">Dashboard</flux:heading>
     <flux:separator class="my-5" />
 
-    <livewire:diagram.apex />
-
+    <div class="grid grid.cols-2">
+        <livewire:diagram.apex />
+        <livewire:rekap.rekap />
+    </div>
 </x-layouts.app>

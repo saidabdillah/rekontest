@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('nm_kegiatan');
             $table->string('kd_sub_kegiatan');
             $table->string('nm_sub_kegiatan');
-            $table->string('aktivitas');
+            $table->text('aktivitas');
             $table->string('kd_rekening');
             $table->string('nm_rekening');
             $table->string('pagu_anggaran');

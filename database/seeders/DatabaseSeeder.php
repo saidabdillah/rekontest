@@ -18,18 +18,18 @@ class DatabaseSeeder extends Seeder
     {
 
         $superAdmin = Role::create(['name' => 'super admin']);
-        $admin = Role::create(['name' => 'admin']);
+        Role::create(['name' => 'admin']);
 
-        $permissions = [
-            'view',
-            'create',
-        ];
+        // $permissions = [
+        //     'view',
+        //     'create',
+        // ];
 
-        foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
-        }
+        // foreach ($permissions as $permission) {
+        //     Permission::create(['name' => $permission]);
+        // }
 
-        $superAdmin->syncPermissions($permissions);
+        // $superAdmin->syncPermissions($permissions);
 
         $user = User::factory()->create([
             'name' => 'Admin',
@@ -39,6 +39,7 @@ class DatabaseSeeder extends Seeder
 
 
         $user->assignRole($superAdmin);
-        $user->syncPermissions($permissions);
+        // $user->syncPermissions($permissions);
+        $this->call(SaldoAwalSeeder::class);
     }
 }

@@ -1,7 +1,7 @@
 <div>
     <flux:heading size="xl">Pesan</flux:heading>
     <flux:separator class="my-5" />
-    <section class="w-full md:w-3/4 lg:w-1/2 h-[850px] overflow-y-auto bg-zinc-100 dark:bg-zinc-600 p-10 rounded-md">
+    <section class="w-full lg:w-1/2 h-[850px] overflow-y-auto bg-zinc-100 dark:bg-zinc-600 p-10 rounded-md">
         <ul class="h-full">
             @forelse ($notifications as $notification)
             <li wire:key="{{ $notification->id }}"

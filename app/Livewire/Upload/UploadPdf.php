@@ -43,9 +43,10 @@ class UploadPdf extends Component
         }
     }
 
-    public function updatingCari()
+    public function cariData()
     {
-        if (!empty($this->cari)) $this->resetPage();
+        // Pagination buttons should not disappear during search
+        $this->resetPage();
     }
 
 
@@ -53,7 +54,7 @@ class UploadPdf extends Component
     {
         $tb_data = TbData::when($this->cari, function ($query) {
             $query->cari($this->cari);
-        })->latest()->paginate(3);
+        })->latest()->paginate(50);
 
         return view('livewire.upload.upload-pdf', compact('tb_data'));
     }

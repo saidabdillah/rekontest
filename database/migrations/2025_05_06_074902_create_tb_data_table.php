@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('nomor_bukti');
             $table->bigInteger('total_rekon');
             $table->bigInteger('total_bukti');
-            $table->string('file_path');
+            $table->string('file_path')->default('');
             $table->timestamps();
         });
     }

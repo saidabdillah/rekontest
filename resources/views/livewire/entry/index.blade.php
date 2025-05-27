@@ -132,7 +132,6 @@
         </div>
     </section>
 
-    @canany(['create', 'view'])
     <flux:separator class="mt-10 mb-5" />
 
     <section>
@@ -142,6 +141,5 @@
             </div>
         </form>
     </section>
-    @endcan
 
 </div>

@@ -59,11 +59,4 @@ class User extends Authenticatable implements MustVerifyEmail
             ->map(fn(string $name) => Str::of($name)->substr(0, 1))
             ->implode('');
     }
-
-    public function scopeNonAdmin($query)
-    {
-        return $query->whereDoesntHave('roles', function ($q) {
-            $q->where('name', '!=', 'admin');
-        });
-    }
 }

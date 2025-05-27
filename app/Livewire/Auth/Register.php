@@ -43,7 +43,6 @@ class Register extends Component
         event(new Registered(($user = User::create($validated))));
         $user->notify(new NotificationVerifyUser($user));
         $user->assignRole('admin');
-        $user->syncPermissions(['view']);
         Auth::login($user);
 
         $this->redirect(route('dashboard', absolute: false), navigate: true);

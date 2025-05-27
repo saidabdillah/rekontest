@@ -13,7 +13,7 @@
         </div>
 
         <div class="grid gap-4 sm:w-1/2 xl:w-1/3 items-end">
-            <flux:input type="file" wire:model="banyakFile" label="SKPD" accept=".xlsx,xls" />
+            <flux:input type="file" wire:model="skpd" label="SKPD" accept=".xlsx,xls" />
             <flux:button variant="primary" wire:click="uploadSkpd">Upload SKPD</flux:button>
         </div>
 
@@ -23,8 +23,13 @@
         </div>
 
         <div class="grid gap-4 sm:w-1/2 xl:w-1/3 items-end">
-            <flux:input type="file" wire:model="sub_unit" accept=".xlsx,xls" label="Sub Unit" />
-            <flux:button variant="primary" wire:click="uploadSubUnit">Upload Sub Unit</flux:button>
+            <flux:input type="file" wire:model="reg_sp2d" accept=".xlsx,xls" label="Reg Sp2d" />
+            <flux:button variant="primary" wire:click="uploadRegSp2d">Upload Reg Sp2d</flux:button>
+        </div>
+
+        <div class="grid gap-4 sm:w-1/2 xl:w-1/3 items-end">
+            <flux:input type="file" wire:model="reg_spb" accept=".xlsx,xls" label="Reg Spb" />
+            <flux:button variant="primary" wire:click="uploadRegSpb">Upload Reg Spb</flux:button>
         </div>
 
         <form>

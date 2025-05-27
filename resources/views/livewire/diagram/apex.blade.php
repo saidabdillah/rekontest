@@ -9,30 +9,46 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
         diagramLine = {
-                        colors: ['#000000'],
                         chart: {
-                            type: 'line'
+                            type: 'line',
+                            height: 350
                         },
                         stroke: {
                             curve: 'smooth',
                             width: 10},
                         series: [
                             {
-                                name: 'Sales',
+                                name: 'Rekon',
                                 data: {!! json_encode(array_values($penerimaan)) !!}
                             }
                         ],
                         xaxis: {
-                            categories: {!! json_encode(array_keys($penerimaan)) !!}
+                            categories: {!! json_encode(array_keys($penerimaan)) !!},
+                            title: {
+                                text: 'Tanggal'
+                            },
+                            labels: {
+                                style: {
+                                    colors: '#000000'
+                                }
+                            }
+                        },
+                        yaxis: {
+                            title: {
+                                text: 'Jumlah'
+                            },
+                            labels: {
+                                style: {
+                                    colors: '#000000'
+                                }
+                            }
                         }
-                    }
-
-    
+                    };
 
         diagramBar = {
-                colors: ['#000000'],
                 chart: {
-                    type: 'bar'
+                    type: 'bar',
+                    height: 350
                 },
                 series: [{
                     data: [{
@@ -43,7 +59,7 @@
                     y: {{ $totalTbDataBkubud }}
                     }]
                 }]
-                }
+                };
 
     var chart1 = new ApexCharts(document.querySelector("#chart1"), diagramLine);
     var chart2 = new ApexCharts(document.querySelector("#chart2"), diagramBar);
