@@ -1,9 +1,12 @@
 <?php
 
+use App\Livewire\Rekap\BkubudDetail;
+use App\Livewire\Rekap\RekonDetail;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use App\Livewire\Users\Edit;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -35,12 +38,22 @@ Route::prefix('entry')->group(function () {
     });
 });
 
+// Rekap
+Route::prefix('rekap')->group(function () {
+    Route::group(['middleware' => ['role:super admin|admin', 'auth']], function () {
+        Route::view('/rekon', 'rekon')->name('rekon');
+        Route::get('/rekon/detail/{tanggal}', RekonDetail::class)->name('rekon.detail');
+        Route::get('/bkubud/detail/{tanggal}', BkubudDetail::class)->name('bkubud.detail');
+        Route::view('/bkubud', 'bkubud')->name('bkubud');
+        Route::view('/rekap', 'rekap')->name('rekap');
+    });
+});
+
 // Cetak
 Route::prefix('cetak')->group(function () {
     Route::group(['middleware' => ['role:super admin|admin', 'auth']], function () {
         Route::view('/rekonsiliasi', 'cetak-rekonsiliasi')
             ->name('cetak.rekonsiliasi');
-        Route::view('/rekap', 'rekap')->name('rekap');
         Route::view('/laporan', 'perbandingan')->name('laporan');
     });
 });

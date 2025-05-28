@@ -6,13 +6,14 @@ use App\Models\Rekon;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
-use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
-class RekonImport implements ToCollection, WithHeadingRow, ShouldQueue, WithChunkReading, WithBatchInserts
+class RekonImport implements ToCollection, WithHeadingRow, WithMultipleSheets, ShouldQueue, WithChunkReading
 {
+
     public function sheets(): array
     {
         return [
@@ -38,11 +39,6 @@ class RekonImport implements ToCollection, WithHeadingRow, ShouldQueue, WithChun
                 'uraian' => $row['uraian'],
             ]);
         }
-    }
-
-    public function batchSize(): int
-    {
-        return 1000;
     }
 
     public function chunkSize(): int

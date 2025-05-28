@@ -8,6 +8,8 @@ use App\Imports\RegSpbImport;
 use App\Imports\RekonImport;
 use App\Imports\SubUnitImport;
 use App\Imports\TarikDataKkImport;
+use App\Models\Rekon;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Maatwebsite\Excel\Facades\Excel;
@@ -16,7 +18,8 @@ class Create extends Component
 {
     use WithFileUploads;
     public $skpd;
-    public $rekon, $bkubud;
+    public $rekon;
+    public $bkubud;
     public $sub_unit;
     public $reg_sp2d;
     public $reg_spb;
@@ -40,7 +43,7 @@ class Create extends Component
             $this->dispatch('notif', message: 'Data Rekon Berhasil Diupload', type: 'success', title: 'Berhasil');
             $this->reset();
         } catch (\Throwable $e) {
-            $this->dispatch('notif', message: $e->getMessage(), type: 'error', title: 'Gagal');
+            $this->dispatch('notif', message: 'File Rekon Gagal Di Upload', type: 'error', title: 'Gagal');
         }
     }
 

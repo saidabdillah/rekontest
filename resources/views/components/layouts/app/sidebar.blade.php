@@ -15,7 +15,7 @@
         </a>
 
         <flux:navlist variant="outline">
-            <flux:navlist.group :heading="__('Platform')" class="grid">
+            <flux:navlist.group :heading="__('Dashboard')" class="grid">
                 <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')"
                     wire:navigate>{{
                     __('Dashboard') }}</flux:navlist.item>
@@ -37,7 +37,7 @@
 
         <flux:navlist variant="outline">
             <flux:navlist.group :heading="__('Laporan')" class="grid">
-                <flux:navlist.group expandable heading="Rekonsialisasi" class="grid">
+                <flux:navlist.group expandable heading="Laporan" class="grid">
                     <flux:navlist.item icon="clipboard" :href="route('entry.index')"
                         :current="request()->routeIs('entry.index')" wire:navigate>{{ __('Entry') }}</flux:navlist.item>
                     <flux:navlist.item icon="plus" :href="route('entry.create')"
@@ -48,8 +48,21 @@
         </flux:navlist>
 
         <flux:navlist variant="outline">
+            <flux:navlist.group :heading="__('Rekap')" class="grid">
+                <flux:navlist.group expandable heading="Rekap" class="grid">
+                    <flux:navlist.item icon="chart-pie" :href="route('rekon')"
+                        :current="request()->routeIs('rekon', 'rekon.detail')" wire:navigate>{{ __('Rekon') }}
+                    </flux:navlist.item>
+                    <flux:navlist.item icon="archive-box" :href="route('bkubud')"
+                        :current="request()->routeIs('bkubud', 'bkubud.detail')" wire:navigate>{{ __('BKUBUD') }}
+                    </flux:navlist.item>
+                </flux:navlist.group>
+            </flux:navlist.group>
+        </flux:navlist>
+
+        <flux:navlist variant="outline">
             <flux:navlist.group :heading="__('Cetak')" class="grid">
-                <flux:navlist.group expandable heading="Rekonsialisasi" class="grid">
+                <flux:navlist.group expandable heading="Cetak" class="grid">
                     <flux:navlist.item icon="printer" :href="route('cetak.rekonsiliasi')"
                         :current="request()->routeIs('cetak.rekonsiliasi')" wire:navigate>{{ __('Cetak
                         Rekonsiliasi') }}

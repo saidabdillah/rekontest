@@ -39,6 +39,7 @@ class UploadPdf extends Component
             $this->modal('uploadPdf-' . $id)->close();
             $this->dispatch('notif', message: 'Upload file PDF berhasil', type: 'success', title: 'Berhasil');
         } catch (\Throwable $th) {
+            $this->modal('uploadPdf-' . $id)->close();
             $this->dispatch('notif', message: $th->getMessage(), type: 'error', title: 'Gagal');
         }
     }

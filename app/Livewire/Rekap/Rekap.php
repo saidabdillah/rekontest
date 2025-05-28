@@ -4,7 +4,6 @@ namespace App\Livewire\Rekap;
 
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
-use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Sum;
 
 class Rekap extends Component
 {
