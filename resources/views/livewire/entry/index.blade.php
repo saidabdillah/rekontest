@@ -71,14 +71,14 @@
             <flux:separator class="mt-10 mb-5" />
 
             <flux:modal.trigger name="lihat-bkubud" wire:click="cariBkubuds">
-                <flux:button variant="primary" class="w-fit">BKU_BUD</flux:button>
+                <flux:button variant="primary" class="w-fit">BKUBUD</flux:button>
             </flux:modal.trigger>
 
-            <flux:modal name="lihat-bkubud" class="w-sm lg:w-3xl">
+            <flux:modal name="lihat-bkubud" class="w-sm lg:w-6xl">
                 <form wire:submit="cariBkubud">
                     <div class="space-y-6">
                         <div>
-                            <flux:heading size="lg">Cari BKU_BUD</flux:heading>
+                            <flux:heading size="lg">Cari BKUBUD</flux:heading>
                             <flux:text class="mt-2">Lorem ipsum dolor sit amet.</flux:text>
                         </div>
                         <div x-data>
@@ -88,10 +88,10 @@
 
                             <ul class="mt-2 overflow-y-auto max-h-64">
                                 @forelse($bkubuds as $item)
-                                <li class="p-3 cursor-pointer mb-2 hover:text-black hover:bg-zinc-100 rounded-lg border mt-3 dark:hover:bg-zinc-100 dark:hover:text-black"
+                                <li class="p-3 cursor-pointer overflow-x-hidden mb-2 hover:text-black hover:bg-zinc-100 rounded-lg border mt-3 dark:hover:bg-zinc-100 dark:hover:text-black"
                                     wire:click="pilihBkubud('{{  $item->no_bukti}}')">
-                                    {{
-                                    $item->no_bukti }}</li>
+                                    {{ $item->tanggal . '#' . $item->no_bukti . '#' . $item->penerimaan . '#' .
+                                    $item->pengeluaran }}</li>
                                 @empty
                                 <li class="cursor-pointer border-2 p-3 mt-3 rounded-lg">Tidak ada</li>
                                 @endforelse

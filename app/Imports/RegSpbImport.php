@@ -3,17 +3,14 @@
 namespace App\Imports;
 
 use App\Models\TbRegSpb;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Concerns\SkipsOnFailure;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\ToCollection;
-use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
-use Maatwebsite\Excel\Validators\Failure;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
-class RegSpbImport implements ToCollection, WithHeadingRow, WithMultipleSheets, ShouldQueue, WithChunkReading
+class RegSpbImport implements ToCollection, WithHeadingRow, WithMultipleSheets
 {
     /**
      * @param Collection $collection
@@ -28,28 +25,19 @@ class RegSpbImport implements ToCollection, WithHeadingRow, WithMultipleSheets, 
 
     public function collection(Collection $rows)
     {
-        try {
-            if (isset($rows)) TbRegSpb::truncate();
+        if (isset($rows)) DB::table('tb_reg_spb')->delete();
 
-            foreach ($rows as $row) {
-                TbRegSpb::create([
-                    'sub_unit' => $row['subunit'],
-                    'tanggal' => Date::excelToDateTimeObject($row['tanggal'])->format('Y-m-d'),
-                    'no_spb' => $row['no_spb'],
-                    'no_sp2b' => $row['no_sp2b'],
-                    'uraian' => $row['uraian_spb'],
-                    'pendapatan' => $row['pendapatan'],
-                    'belanja' => $row['belanja'],
-                    'jenis' => $row['jenis'],
-                ]);
-            }
-        } catch (\Throwable $th) {
-            dd($th);
+        foreach ($rows as $row) {
+            TbRegSpb::create([
+                'sub_unit' => $row['subunit'],
+                'tanggal' => $row['tanggal'],
+                'no_spb' => $row['no_spb'],
+                'no_sp2b' => $row['no_sp2b'],
+                'uraian' => $row['uraian_spb'],
+                'pendapatan' => $row['pendapatan'],
+                'belanja' => $row['belanja'],
+                'jenis' => $row['jenis'],
+            ]);
         }
-    }
-
-    public function chunkSize(): int
-    {
-        return 1000;
     }
 }

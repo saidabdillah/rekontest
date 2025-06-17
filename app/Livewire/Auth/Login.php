@@ -9,15 +9,18 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 #[Layout('components.layouts.auth')]
 class Login extends Component
 {
-    #[Validate('required|string|email', message: [
+    #[Title('Masuk')]
+    #[Validate('required|string|email:rfc,dns|exists:users', message: [
         'required' => 'Email wajib diisi',
         'email' => 'Email tidak valid',
+        'exists' => 'Email tidak terdaftar',
     ])]
     public string $email = '';
 
@@ -41,7 +44,8 @@ class Login extends Component
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
+                'email' => __('Email atau password salah'),
+                // 'email' => __('auth.failed'),
             ]);
         }
 

@@ -19,9 +19,9 @@ return new class extends Migration
             $table->string('sub_unit');
             $table->string('nama_penerima');
             $table->text('keterangan');
-            $table->bigInteger('bruto');
-            $table->bigInteger('potongan');
-            $table->bigInteger('netto');
+            $table->decimal('bruto', 20, 2);
+            $table->decimal('potongan', 20, 2);
+            $table->decimal('netto', 20, 2);
             $table->timestamps();
         });
     }

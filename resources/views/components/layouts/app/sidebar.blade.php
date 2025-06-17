@@ -36,8 +36,8 @@
         @endrole
 
         <flux:navlist variant="outline">
-            <flux:navlist.group :heading="__('Laporan')" class="grid">
-                <flux:navlist.group expandable heading="Laporan" class="grid">
+            <flux:navlist.group :heading="__('Entry')" class="grid">
+                <flux:navlist.group expandable heading="Entry" class="grid">
                     <flux:navlist.item icon="clipboard" :href="route('entry.index')"
                         :current="request()->routeIs('entry.index')" wire:navigate>{{ __('Entry') }}</flux:navlist.item>
                     <flux:navlist.item icon="plus" :href="route('entry.create')"
@@ -50,6 +50,9 @@
         <flux:navlist variant="outline">
             <flux:navlist.group :heading="__('Rekap')" class="grid">
                 <flux:navlist.group expandable heading="Rekap" class="grid">
+                    {{-- <flux:navlist.item icon="arrow-path-rounded-square" :href="route('rekap')"
+                        :current="request()->routeIs('rekap')" wire:navigate>{{ __('Rekap') }}
+                    </flux:navlist.item> --}}
                     <flux:navlist.item icon="chart-pie" :href="route('rekon')"
                         :current="request()->routeIs('rekon', 'rekon.detail')" wire:navigate>{{ __('Rekon') }}
                     </flux:navlist.item>
@@ -67,9 +70,6 @@
                         :current="request()->routeIs('cetak.rekonsiliasi')" wire:navigate>{{ __('Cetak
                         Rekonsiliasi') }}
                     </flux:navlist.item>
-                    <flux:navlist.item icon="arrow-path-rounded-square" :href="route('rekap')"
-                        :current="request()->routeIs('rekap')" wire:navigate>{{ __('Rekap') }}
-                    </flux:navlist.item>
                     <flux:navlist.item icon="chart-bar" :href="route('laporan')"
                         :current="request()->routeIs('laporan')" wire:navigate>{{ __('Perbandingan') }}
                     </flux:navlist.item>
@@ -79,6 +79,11 @@
 
 
         <flux:spacer />
+        <flux:radio.group x-data variant="segmented" x-model="$flux.appearance">
+            <flux:radio value="light" icon="sun">{{ __('Light') }}</flux:radio>
+            <flux:radio value="dark" icon="moon">{{ __('Dark') }}</flux:radio>
+            {{-- <flux:radio value="system" icon="computer-desktop">{{ __('System') }}</flux:radio> --}}
+        </flux:radio.group>
 
         <!-- Desktop User Menu -->
         <div class="hidden lg:block">
@@ -171,22 +176,7 @@
 
 
     @fluxScripts
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    @stack('scripts')
-    <script>
-        document.addEventListener('livewire:init', () => {
-            Livewire.on('notif', (e) => {
-                Swal.fire({
-                    title: e.title,
-                    text: e.message,
-                    icon: e.type,
-                    timer: 2000
-                })
-            });
-        });
-    </script>
-    </script>
 </body>
 
 </html>

@@ -33,13 +33,13 @@ class DatabaseSeeder extends Seeder
 
         $user = User::factory()->create([
             'name' => 'Admin',
-            'email' => 'admin@example.com',
-            'password' => Hash::make('password'),
+            'email' => 'admin@admin.com',
+            'password' => Hash::make('sikorekmy.id'),
         ]);
 
 
         $user->assignRole($superAdmin);
         // $user->syncPermissions($permissions);
-        $this->call(SaldoAwalSeeder::class);
+        // $this->call(SaldoAwalSeeder::class);
     }
 }

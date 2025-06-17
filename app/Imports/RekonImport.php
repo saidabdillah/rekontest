@@ -3,15 +3,14 @@
 namespace App\Imports;
 
 use App\Models\Rekon;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\ToCollection;
-use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
-class RekonImport implements ToCollection, WithHeadingRow, WithMultipleSheets, ShouldQueue, WithChunkReading
+class RekonImport implements ToCollection, WithHeadingRow, WithMultipleSheets
 {
 
     public function sheets(): array
@@ -23,26 +22,19 @@ class RekonImport implements ToCollection, WithHeadingRow, WithMultipleSheets, S
 
     public function collection(Collection $rows)
     {
-        if (isset($rows)) Rekon::truncate();
+        if (isset($rows)) DB::table('rekon')->delete();
 
         foreach ($rows as $row) {
-            $tanggal = Date::excelToDateTimeObject($row['tanggal'])->format('Y-m-d');
-            $id_rekon = $row['kode_transaksi'] . '-' .  $tanggal . '-' . $row['penerimaan'] . '-' . $row['pengeluaran'];
             Rekon::create([
-                'id_rekon' => $id_rekon,
+                'id_rekon' => $row['id_rekon'],
                 'hal' => $row['hal'],
                 'urut' => $row['urut'],
-                'tanggal' => $tanggal,
+                'tanggal' => $row['tanggal'],
                 'kode_transaksi' => $row['kode_transaksi'],
                 'penerimaan' => $row['penerimaan'],
                 'pengeluaran' => $row['pengeluaran'],
                 'uraian' => $row['uraian'],
             ]);
         }
-    }
-
-    public function chunkSize(): int
-    {
-        return 1000;
     }
 }

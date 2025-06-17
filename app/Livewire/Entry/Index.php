@@ -6,6 +6,7 @@ use App\Models\Bkubud;
 use App\Models\Rekon;
 use App\Models\TbData;
 use Exception;
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -31,10 +32,14 @@ class Index extends Component
     public $image;
 
 
-    // #[On('aktif')]
+    #[On('aktif')]
     public function cariBkubuds()
     {
-        $this->bkubuds = Bkubud::where('no_bukti', 'like', '%' . $this->query . '%')->get();
+        $this->bkubuds = Bkubud::whereLike('no_bukti', '%' . $this->query . '%')
+            ->orWhereLike('uraian', '%' . $this->query . '%')
+            ->orWhereLike('penerimaan', '%' . $this->query . '%')
+            ->orWhereLike('pengeluaran', '%' . $this->query . '%')
+            ->get();
         $this->totalNomorBukti = '';
     }
 
@@ -88,23 +93,28 @@ class Index extends Component
             if (!$this->bkubud) throw new Exception('Data tidak ditemukan');
             $this->totalNomorBukti = $this->bkubud->penerimaan + $this->bkubud->pengeluaran;
 
-            if ($this->totalKodeTransaksi !== $this->totalNomorBukti) {
-                $this->bkubud = [];
-                $this->totalNomorBukti = '';
-                throw new Exception('Data tidak sesuai');
-            };
+            // if ($this->totalKodeTransaksi !== $this->totalNomorBukti) {
+            //     $this->bkubud = [];
+            //     $this->totalNomorBukti = '';
+            //     throw new Exception('Data tidak sesuai');
+            // };
 
             $this->modal('lihat-bkubud')->close();
         } catch (\Throwable $th) {
             $this->modal('lihat-bkubud')->close();
-            $this->dispatch('notif', message: $th->getMessage(), type: 'error', title: 'Gagal');
+            LivewireAlert::title('Gagal!')
+                ->error()
+                ->show();
         }
     }
 
     public function simpanEntry()
     {
         try {
+            if ($this->tanggal == null) throw new Exception('Pilih data dulu.');
+
             if ($this->totalKodeTransaksi !== $this->totalNomorBukti) throw new Exception('Data tidak sesuai');
+            if ($this->rekon->tanggal !== $this->bkubud->tanggal) throw new Exception('Data tidak sesuai');
 
             $result = TbData::where('id_rekon', $this->rekon->id_rekon)->first();
 
@@ -125,9 +135,13 @@ class Index extends Component
             Bkubud::where('no_bukti', $this->bkubud->no_bukti)->delete();
 
             $this->reset();
-            $this->dispatch('notif', message: 'Data berhasil disimpan', type: 'success', title: 'Berhasil');
+            LivewireAlert::title('Berhasil!')
+                ->success()
+                ->show();
         } catch (\Throwable $th) {
-            $this->dispatch('notif', message: $th->getMessage(), type: 'error', title: 'Gagal');
+            LivewireAlert::title($th->getMessage())
+                ->error()
+                ->show();
         }
     }
 

@@ -55,7 +55,7 @@ class UploadPdf extends Component
     {
         $tb_data = TbData::when($this->cari, function ($query) {
             $query->cari($this->cari);
-        })->latest()->paginate(50);
+        })->latest()->paginate(10);
 
         return view('livewire.upload.upload-pdf', compact('tb_data'));
     }

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->date('tanggal');
             $table->string('no_bukti');
             $table->text('uraian');
-            $table->decimal('nilai', 20, 3);
+            $table->decimal('nilai', 30, 2);
             $table->timestamps();
         });
     }

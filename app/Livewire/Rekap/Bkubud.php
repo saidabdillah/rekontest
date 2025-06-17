@@ -3,40 +3,84 @@
 namespace App\Livewire\Rekap;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class Bkubud extends Component
 {
-    public $kalender;
-    public function render()
-    {
-        return view('livewire.rekap.bkubud');
-    }
+    public $kalender = [];
+    public $bkubudData = [];
+    public $detailTanggal = null;
+    public $detailData = [];
+    public $currentMonth;
+    public $currentYear;
 
     public function mount()
     {
-        $tahun = Carbon::now()->year;
+        $this->currentMonth = now()->month;
+        $this->currentYear = now()->year;
+        $this->generateKalender();
+        $this->loadBkubudData();
+    }
 
-        $bulanAwal = Carbon::create($tahun, 1, 1);
-        $bulanAkhir = Carbon::create($tahun, 12, 31);
+    public function generateKalender()
+    {
+        $tanggalAwal = Carbon::create($this->currentYear, $this->currentMonth, 1);
+        $tanggalAkhir = $tanggalAwal->copy()->endOfMonth();
 
-        $tanggalAwal = $bulanAwal->copy()->startOfMonth();
-        $tanggalAkhir = $bulanAkhir->copy()->endOfMonth();
         $kalender = [];
 
         while ($tanggalAwal <= $tanggalAkhir) {
-            $bulan = $tanggalAwal->locale('id')->translatedFormat('d'); // Nama bulan seperti "Januari"
-            // $hari = $tanggalAwal->locale('id')->translatedFormat('l'); // Nama hari seperti "Senin"
-
             $kalender[] = [
-                'tanggal' => $tanggalAwal->copy()->translatedFormat('d'),
-                'bulan' => $bulan,
-                'tahun' => $tahun,
+                'tanggal' => $tanggalAwal->format('d'),
+                'tanggal_penuh' => $tanggalAwal->format('Y-m-d'),
             ];
-
             $tanggalAwal->addDay();
         }
 
         $this->kalender = $kalender;
+    }
+
+    public function loadBkubudData()
+    {
+        $data = DB::table('bkubud')
+            ->whereYear('tanggal', $this->currentYear)
+            ->whereMonth('tanggal', $this->currentMonth)
+            ->get();
+
+        $this->bkubudData = $data->groupBy('tanggal');
+    }
+
+    public function previousMonth()
+    {
+        $date = Carbon::create($this->currentYear, $this->currentMonth, 1)->subMonth();
+        $this->currentMonth = $date->month;
+        $this->currentYear = $date->year;
+        $this->generateKalender();
+        $this->loadBkubudData();
+        $this->detailTanggal = null;
+        $this->detailData = [];
+    }
+
+    public function nextMonth()
+    {
+        $date = Carbon::create($this->currentYear, $this->currentMonth, 1)->addMonth();
+        $this->currentMonth = $date->month;
+        $this->currentYear = $date->year;
+        $this->generateKalender();
+        $this->loadBkubudData();
+        $this->detailTanggal = null;
+        $this->detailData = [];
+    }
+
+    public function showDetail($tanggal)
+    {
+        $this->detailTanggal = $tanggal;
+        $this->detailData = DB::table('bkubud')->where('tanggal', $tanggal)->get();
+    }
+
+    public function render()
+    {
+        return view('livewire.rekap.bkubud');
     }
 }

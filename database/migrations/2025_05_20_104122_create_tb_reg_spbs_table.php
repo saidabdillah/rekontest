@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('no_spb');
             $table->string('no_sp2b');
             $table->text('uraian');
-            $table->unsignedBigInteger('pendapatan');
-            $table->unsignedBigInteger('belanja');
+            $table->decimal('pendapatan', 20, 2);
+            $table->decimal('belanja', 20, 2);
             $table->string('jenis');
             $table->timestamps();
         });

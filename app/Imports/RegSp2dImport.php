@@ -3,16 +3,15 @@
 namespace App\Imports;
 
 use App\Models\TbRegSp2d;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\ToCollection;
-use Maatwebsite\Excel\Concerns\WithChunkReading;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
 
-class RegSp2dImport implements ToCollection, WithHeadingRow, WithMultipleSheets, ShouldQueue, WithChunkReading
+class RegSp2dImport implements ToCollection, WithHeadingRow, WithMultipleSheets
 {
     /**
      * @param Collection $collection
@@ -27,11 +26,11 @@ class RegSp2dImport implements ToCollection, WithHeadingRow, WithMultipleSheets,
 
     public function collection(Collection $rows)
     {
-        if (isset($rows)) TbRegSp2d::truncate();
+        if (isset($rows)) DB::table('tb_reg_sp2d')->delete();
 
         foreach ($rows as $row) {
             TbRegSp2d::create([
-                'tanggal' => Date::excelToDateTimeObject($row['tanggal'])->format('Y-m-d'),
+                'tanggal' => $row['tanggal'],
                 'no_sp2d' => $row['no_sp2d'],
                 'jenis' => $row['jenis'],
                 'sub_unit' => $row['subunit'],
@@ -42,10 +41,5 @@ class RegSp2dImport implements ToCollection, WithHeadingRow, WithMultipleSheets,
                 'netto' => $row['netto'],
             ]);
         }
-    }
-
-    public function chunkSize(): int
-    {
-        return 1000;
     }
 }

@@ -35,8 +35,8 @@
                     <td>{{ $data->id_rekon }}</td>
                     <td>{{ $data->kode_transaksi }}</td>
                     <td>{{ $data->nomor_bukti }}</td>
-                    <td>{{ $data->total_rekon }}</td>
-                    <td>{{ $data->total_bukti }}</td>
+                    <td>{{ Number::currency($data->total_rekon, 'IDR', 'id') }}</td>
+                    <td>{{ Number::currency($data->total_bukti, 'IDR', 'id') }}</td>
                     @if ($data->file_path)
                     <td class="text-center">
                         <flux:button target="_blank" href="{{ Storage::url($data->file_path) }}">Download</flux:button>

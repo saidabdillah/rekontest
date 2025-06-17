@@ -16,8 +16,8 @@ return new class extends Migration
             $table->date('tanggal');
             $table->string('no_bukti');
             $table->text('uraian');
-            $table->bigInteger('penerimaan');
-            $table->bigInteger('pengeluaran');
+            $table->decimal('penerimaan', 20, 2);
+            $table->decimal('pengeluaran', 20, 2);
             $table->timestamps();
             $table->softDeletes();
         });

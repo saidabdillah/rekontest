@@ -42,10 +42,8 @@ Route::prefix('entry')->group(function () {
 Route::prefix('rekap')->group(function () {
     Route::group(['middleware' => ['role:super admin|admin', 'auth']], function () {
         Route::view('/rekon', 'rekon')->name('rekon');
-        Route::get('/rekon/detail/{tanggal}', RekonDetail::class)->name('rekon.detail');
-        Route::get('/bkubud/detail/{tanggal}', BkubudDetail::class)->name('bkubud.detail');
         Route::view('/bkubud', 'bkubud')->name('bkubud');
-        Route::view('/rekap', 'rekap')->name('rekap');
+        // Route::view('', 'rekap')->name('rekap');
     });
 });
 

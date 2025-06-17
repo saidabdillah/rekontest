@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('urut');
             $table->date('tanggal');
             $table->string('kode_transaksi');
-            $table->bigInteger('penerimaan');
-            $table->bigInteger('pengeluaran');
+            $table->decimal('penerimaan', 20, 2);
+            $table->decimal('pengeluaran', 20, 2);
             $table->text('uraian');
             $table->timestamps();
             $table->softDeletes();
