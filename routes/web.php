@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Entry\Saldo;
 use App\Livewire\Rekap\BkubudDetail;
 use App\Livewire\Rekap\RekonDetail;
 use App\Livewire\Settings\Appearance;
@@ -36,6 +37,8 @@ Route::prefix('entry')->group(function () {
         Route::view('/tambah', 'create-entry')
             ->name('entry.create');
     });
+
+    Route::get('saldo', Saldo::class)->name('saldo')->middleware('role:super admin');
 });
 
 // Rekap

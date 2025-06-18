@@ -43,6 +43,9 @@
                     <flux:navlist.item icon="plus" :href="route('entry.create')"
                         :current="request()->routeIs('entry.create')" wire:navigate>{{ __('Tambah Entry') }}
                     </flux:navlist.item>
+                    <flux:navlist.item icon="currency-dollar" :href="route('saldo')"
+                        :current="request()->routeIs('saldo')" wire:navigate>{{ __('Saldo') }}
+                    </flux:navlist.item>
                 </flux:navlist.group>
             </flux:navlist.group>
         </flux:navlist>

@@ -4,6 +4,7 @@ namespace App\Livewire\Upload;
 
 use App\Models\TbData;
 use Illuminate\Support\Facades\Storage;
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithoutUrlPagination;
@@ -37,10 +38,14 @@ class UploadPdf extends Component
             $tb_data->save();
 
             $this->modal('uploadPdf-' . $id)->close();
-            $this->dispatch('notif', message: 'Upload file PDF berhasil', type: 'success', title: 'Berhasil');
+            LivewireAlert::title('Berhasil!')
+                ->success()
+                ->show();
         } catch (\Throwable $th) {
             $this->modal('uploadPdf-' . $id)->close();
-            $this->dispatch('notif', message: $th->getMessage(), type: 'error', title: 'Gagal');
+            LivewireAlert::title('Gagal!')
+                ->error()
+                ->show();
         }
     }
 

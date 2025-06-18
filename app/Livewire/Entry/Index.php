@@ -23,7 +23,7 @@ class Index extends Component
     public $nomorBukti = [];
     public $nomor_bukti;
     public $totalKodeTransaksi;
-    public $totalNomorBukti;
+    public $totalNomorBukti = '';
 
     public $query = '';
     use WithFileUploads;
@@ -32,13 +32,20 @@ class Index extends Component
     public $image;
 
 
-    #[On('aktif')]
+    public function deleteQuery()
+    {
+        $this->query = '';
+        $this->dispatch('cari-bkubuds');
+    }
+
+    #[On('cari-bkubuds')]
     public function cariBkubuds()
     {
         $this->bkubuds = Bkubud::whereLike('no_bukti', '%' . $this->query . '%')
             ->orWhereLike('uraian', '%' . $this->query . '%')
             ->orWhereLike('penerimaan', '%' . $this->query . '%')
             ->orWhereLike('pengeluaran', '%' . $this->query . '%')
+            ->limit(50)
             ->get();
         $this->totalNomorBukti = '';
     }
@@ -46,63 +53,47 @@ class Index extends Component
     public function pilihBkubud($bkubud)
     {
         $this->query = $bkubud;
-        $this->dispatch('aktif');
+        // $this->dispatch('cari-bkubud');
     }
 
+    public function cariBkubud()
+    {
+        try {
+            if (empty($this->query)) throw new Exception('Pilih data dulu.');
+            $this->bkubud = Bkubud::where('no_bukti', $this->query)
+                ->orWhereLike('uraian', '%' . $this->query . '%')
+                ->orWhereLike('penerimaan', '%' . $this->query . '%')
+                ->orWhereLike('pengeluaran', '%' . $this->query . '%')
+                ->first();
+            if (!$this->bkubud) throw new Exception('Data tidak ditemukan');
+            $this->totalNomorBukti = $this->bkubud->penerimaan + $this->bkubud->pengeluaran;
+            $this->modal('lihat-bkubud')->close();
+        } catch (\Throwable $th) {
+            $this->modal('lihat-bkubud')->close();
+            LivewireAlert::title('Gagal!')
+                ->text($th->getMessage())
+                ->error()
+                ->show();
+        }
+    }
 
     public function cariTanggal()
     {
         $this->kodeTransaksi = Rekon::where('tanggal', $this->tanggal)->get();
     }
 
-    #[On('notif')]
     public function cariRekon()
     {
         try {
+            if ($this->tanggal == null) throw new Exception('Pilih tanggal dulu.');
+            if ($this->kode_transaksi == null) throw new Exception('Pilih data dulu.');
             $this->rekon = Rekon::where('kode_transaksi', $this->kode_transaksi)->first();
             $this->totalKodeTransaksi = $this->rekon->penerimaan + $this->rekon->pengeluaran;
             $this->modal('lihat-rekon')->close();
         } catch (\Throwable $th) {
             $this->modal('lihat-rekon')->close();
-        }
-    }
-
-    #[On('notif')]
-    public function pilihRekon($rekon)
-    {
-        try {
-            $this->rekon = Rekon::where('kode_transaksi', $rekon)->first();
-            $this->totalKodeTransaksi = $this->rekon->penerimaan + $this->rekon->pengeluaran;
-            $this->modal('lihat-rekon')->close();
-        } catch (\Throwable $th) {
-            $this->modal('lihat-rekon')->close();
-        }
-    }
-
-    #[On('notif')]
-    public function mount()
-    {
-        $this->nomorBukti = Bkubud::all()->pluck('no_bukti')->toArray();
-    }
-
-    #[On('aktif')]
-    public function cariBkubud()
-    {
-        try {
-            $this->bkubud = Bkubud::where('no_bukti', 'like', '%' . $this->query . '%')->first();
-            if (!$this->bkubud) throw new Exception('Data tidak ditemukan');
-            $this->totalNomorBukti = $this->bkubud->penerimaan + $this->bkubud->pengeluaran;
-
-            // if ($this->totalKodeTransaksi !== $this->totalNomorBukti) {
-            //     $this->bkubud = [];
-            //     $this->totalNomorBukti = '';
-            //     throw new Exception('Data tidak sesuai');
-            // };
-
-            $this->modal('lihat-bkubud')->close();
-        } catch (\Throwable $th) {
-            $this->modal('lihat-bkubud')->close();
             LivewireAlert::title('Gagal!')
+                ->text($th->getMessage())
                 ->error()
                 ->show();
         }
@@ -111,14 +102,16 @@ class Index extends Component
     public function simpanEntry()
     {
         try {
-            if ($this->tanggal == null) throw new Exception('Pilih data dulu.');
 
-            if ($this->totalKodeTransaksi !== $this->totalNomorBukti) throw new Exception('Data tidak sesuai');
+            if (empty($this->rekon) || empty($this->bkubud)) throw new Exception('Data tidak boleh kosong');
             if ($this->rekon->tanggal !== $this->bkubud->tanggal) throw new Exception('Data tidak sesuai');
+            if ($this->totalKodeTransaksi !== $this->totalNomorBukti) throw new Exception('Data tidak sesuai');
 
-            $result = TbData::where('id_rekon', $this->rekon->id_rekon)->first();
+            $rekon = TbData::where('id_rekon', $this->rekon->id_rekon)->first();
+            $bkubud = TbData::where('nomor_bukti', $this->bkubud->no_bukti)->first();
 
-            if ($result) throw new Exception('Data sudah ada');
+            if ($rekon) throw new Exception('Data sudah ada');
+            if ($bkubud) throw new Exception('Data sudah ada');
 
             TbData::create([
                 'tanggal_kode_transaksi' => $this->rekon->tanggal,
@@ -128,7 +121,6 @@ class Index extends Component
                 'nomor_bukti' => $this->bkubud->no_bukti,
                 'total_rekon' => $this->totalKodeTransaksi,
                 'total_bukti' => $this->totalNomorBukti,
-                'file_path' => '',
             ]);
 
             Rekon::where('id_rekon', $this->rekon->id_rekon)->delete();
@@ -139,7 +131,8 @@ class Index extends Component
                 ->success()
                 ->show();
         } catch (\Throwable $th) {
-            LivewireAlert::title($th->getMessage())
+            LivewireAlert::title('Gagal!')
+                ->text($th->getMessage())
                 ->error()
                 ->show();
         }

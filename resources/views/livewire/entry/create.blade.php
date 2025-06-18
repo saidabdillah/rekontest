@@ -13,20 +13,20 @@
             <flux:button variant="primary" wire:click="uploadBKUBUD">Upload BKUBUD</flux:button>
         </div>
 
-        <div class="grid gap-4 sm:w-1/2 xl:w-1/3 items-end">
+        {{-- <div class="grid gap-4 sm:w-1/2 xl:w-1/3 items-end">
             <flux:input type="file" wire:model="tb_data" accept=".xlsx,xls" label="Data" />
             <flux:button variant="primary" wire:click="uploadTbData">Upload Data</flux:button>
-        </div>
+        </div> --}}
 
-        <div class="grid gap-4 sm:w-1/2 xl:w-1/3 items-end">
+        {{-- <div class="grid gap-4 sm:w-1/2 xl:w-1/3 items-end">
             <flux:input type="file" wire:model="tb_saldo_awal" accept=".xlsx,xls" label="Saldo Awal" />
             <flux:button variant="primary" wire:click="uploadTbSaldoAwal">Upload Saldo Awal</flux:button>
-        </div>
+        </div> --}}
 
-        <div class="grid gap-4 sm:w-1/2 xl:w-1/3 items-end">
+        {{-- <div class="grid gap-4 sm:w-1/2 xl:w-1/3 items-end">
             <flux:input type="file" wire:model="skpd" label="SKPD" accept=".xlsx,xls" />
             <flux:button variant="primary" wire:click="uploadSkpd">Upload SKPD</flux:button>
-        </div>
+        </div> --}}
 
         <div class="grid gap-4 sm:w-1/2 xl:w-1/3 items-end">
             <flux:input type="file" wire:model="sub_unit" accept=".xlsx,xls" label="Sub Unit" />

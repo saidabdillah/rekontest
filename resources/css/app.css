@@ -71,5 +71,5 @@ select:focus[data-flux-control] {
 
 th,
 td {
-    @apply border-2 px-5 py-3;
+    @apply border-2 px-5 py-3 sm:text-sm;
 }

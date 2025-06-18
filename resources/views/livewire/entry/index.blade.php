@@ -17,7 +17,7 @@
                 <flux:input label="Tanggal Transaksi" type="date" wire:model="tanggal" autofocus
                     wire:change="cariTanggal" />
 
-                <flux:select wire:model="kode_transaksi" wire:change="pilihRekon($event.target.value)">
+                <flux:select wire:model="kode_transaksi">
                     <flux:select.option selected value="">Pilih Kode Transaksi</flux:select.option>
                     @foreach ($kodeTransaksi as $kode)
                     <flux:select.option value="{{ $kode->kode_transaksi }}">{{ $kode->id_rekon }}</flux:select.option>
@@ -54,17 +54,20 @@
                 </flux:field>
                 <flux:field>
                     <flux:label>Penerimaan</flux:label>
-                    <flux:input readonly value="{{ $rekon->penerimaan ?? '' }}" />
+                    <flux:input readonly
+                        value="{{ $rekon?->penerimaan ? Number::currency($rekon->penerimaan, 'IDR', 'id') : '' }}" />
                 </flux:field>
                 <flux:field>
                     <flux:label>Pengeluaran</flux:label>
-                    <flux:input readonly value="{{ $rekon->pengeluaran ?? '' }}" />
+                    <flux:input readonly
+                        value="{{ $rekon?->pengeluaran ? Number::currency($rekon->pengeluaran, 'IDR', 'id') : '' }}" />
                 </flux:field>
                 <flux:textarea readonly label="Uraian" rows="auto">{{ $rekon->uraian ?? '' }}
                 </flux:textarea>
                 <flux:field>
                     <flux:label>Total Kode Transaksi</flux:label>
-                    <flux:input readonly value="{{ $totalKodeTransaksi ?? '' }}" />
+                    <flux:input readonly
+                        value="{{ $totalKodeTransaksi ? Number::currency($totalKodeTransaksi, 'IDR', 'id') : '' }}" />
                 </flux:field>
             </div>
 
@@ -81,22 +84,25 @@
                             <flux:heading size="lg">Cari BKUBUD</flux:heading>
                             <flux:text class="mt-2">Lorem ipsum dolor sit amet.</flux:text>
                         </div>
-                        <div x-data>
-                            <flux:input type="search" autofocus wire:model="query" placeholder="Cari BKUBUD"
-                                wire:keydown="cariBkubuds" wire:click="cariBkubuds" autocomplete="false"
-                                wire:load="cariBkubuds" />
 
-                            <ul class="mt-2 overflow-y-auto max-h-64">
-                                @forelse($bkubuds as $item)
-                                <li class="p-3 cursor-pointer overflow-x-hidden mb-2 hover:text-black hover:bg-zinc-100 rounded-lg border mt-3 dark:hover:bg-zinc-100 dark:hover:text-black"
-                                    wire:click="pilihBkubud('{{  $item->no_bukti}}')">
-                                    {{ $item->tanggal . '#' . $item->no_bukti . '#' . $item->penerimaan . '#' .
-                                    $item->pengeluaran }}</li>
-                                @empty
-                                <li class="cursor-pointer border-2 p-3 mt-3 rounded-lg">Tidak ada</li>
-                                @endforelse
-                            </ul>
-                        </div>
+                        <flux:input autofocus wire:model.live="query" wire:keydown="cariBkubuds"
+                            placeholder="Cari BKUBUD">
+                            <x-slot name="iconTrailing">
+                                <flux:button size="sm" variant="subtle" icon="x-mark" class="-mr-1"
+                                    wire:click="deleteQuery" />
+                            </x-slot>
+                        </flux:input>
+
+                        <ul class="-mt-5 overflow-y-auto max-h-64">
+                            @forelse($bkubuds as $item)
+                            <li class="p-3 cursor-pointer overflow-x-hidden mb-2 hover:text-black hover:bg-zinc-100 rounded-lg border mt-3 dark:hover:bg-zinc-100 dark:hover:text-black"
+                                wire:click="pilihBkubud('{{  $item->no_bukti}}')">
+                                {{ $item->tanggal }} # {{ $item->no_bukti }} # {{ $item->penerimaan }} # {{
+                                $item->pengeluaran }}</li>
+                            @empty
+                            <li class="cursor-pointer border-2 p-3 mt-3 rounded-lg">Tidak ada</li>
+                            @endforelse
+                        </ul>
                         <div class="flex">
                             <flux:spacer />
                             <flux:button type="submit" variant="primary">Cari</flux:button>
@@ -118,15 +124,18 @@
                 </flux:textarea>
                 <flux:field>
                     <flux:label>Penerimaan</flux:label>
-                    <flux:input readonly value="{{ $bkubud->penerimaan ?? '' }}" />
+                    <flux:input readonly
+                        value="{{ $bkubud?->penerimaan ? Number::currency($bkubud->penerimaan ,'IDR', 'id') : '' }}" />
                 </flux:field>
                 <flux:field>
                     <flux:label>Pengeluaran</flux:label>
-                    <flux:input readonly value="{{ $bkubud->pengeluaran ?? '' }}" />
+                    <flux:input readonly
+                        value="{{ $bkubud?->pengeluaran ? Number::currency($bkubud->pengeluaran ,'IDR', 'id') : '' }}" />
                 </flux:field>
                 <flux:field>
                     <flux:label>Total Nomor Bukti</flux:label>
-                    <flux:input readonly value="{{ $totalNomorBukti ?? '' }}" />
+                    <flux:input readonly
+                        value="{{ $totalNomorBukti >= 0 ? Number::currency($totalNomorBukti, 'IDR', 'id') : '' }}" />
                 </flux:field>
             </div>
         </div>

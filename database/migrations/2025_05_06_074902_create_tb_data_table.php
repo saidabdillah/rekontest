@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('nomor_bukti');
             $table->decimal('total_rekon', 20, 2);
             $table->decimal('total_bukti', 20, 2);
-            $table->string('file_path')->default('');
+            $table->string('file_path')->nullable('');
             $table->timestamps();
         });
     }
