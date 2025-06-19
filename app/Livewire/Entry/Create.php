@@ -47,7 +47,7 @@ class Create extends Component
                 ->show();
             $this->reset();
         } catch (\Throwable $e) {
-            // dd($e);
+
             LivewireAlert::title('Gagal!')
                 ->error()
                 ->show();

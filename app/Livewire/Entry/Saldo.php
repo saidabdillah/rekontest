@@ -59,10 +59,11 @@ class Saldo extends Component
         if ($this->saldo) {
             $this->saldo->update($validate);
         } else {
-            SaldoAwal::create($validate);
+            saldoAwal::create($validate);
+            $this->reset(); // Reset component state
+            $this->mount(); // Re-initialize component state
         }
 
-        // $this->reset('deposito', 'giro', 'jkn', 'bok', 'bop', 'blud', 'bos', 'penerimaan', 'pengeluaran');
         $this->modal('tambah-saldo')->close();
         LivewireAlert::title('Berhasil!')
             ->success()

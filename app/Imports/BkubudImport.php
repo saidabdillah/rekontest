@@ -25,7 +25,7 @@ class BkubudImport implements ToCollection, WithHeadingRow, WithMultipleSheets
 
         foreach ($rows as $row) {
             Bkubud::create([
-                'tanggal' => $row['tanggal'],
+                'tanggal' => Date::excelToDateTimeObject($row['tanggal'])->format('Y-m-d'),
                 'no_bukti' => $row['no_bukti'],
                 'penerimaan' => $row['penerimaan'],
                 'pengeluaran' => $row['pengeluaran'],

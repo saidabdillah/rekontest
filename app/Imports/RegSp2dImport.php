@@ -30,7 +30,7 @@ class RegSp2dImport implements ToCollection, WithHeadingRow, WithMultipleSheets
 
         foreach ($rows as $row) {
             TbRegSp2d::create([
-                'tanggal' => $row['tanggal'],
+                'tanggal' => Date::excelToDateTimeObject($row['tanggal'])->format('Y-m-d'),
                 'no_sp2d' => $row['no_sp2d'],
                 'jenis' => $row['jenis'],
                 'sub_unit' => $row['subunit'],

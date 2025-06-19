@@ -65,7 +65,7 @@ class Index extends Component
         ]);
         try {
             // if (empty($this->query)) throw new Exception('Pilih data dulu.');
-            $this->bkubud = Bkubud::where('no_bukti', $this->query)
+            $this->bkubud = Bkubud::whereLike('no_bukti', '%' . $this->query . '%')
                 ->orWhereLike('uraian', '%' . $this->query . '%')
                 ->orWhereLike('penerimaan', '%' . $this->query . '%')
                 ->orWhereLike('pengeluaran', '%' . $this->query . '%')

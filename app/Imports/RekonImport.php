@@ -29,7 +29,7 @@ class RekonImport implements ToCollection, WithHeadingRow, WithMultipleSheets
                 'id_rekon' => $row['id_rekon'],
                 'hal' => $row['hal'],
                 'urut' => $row['urut'],
-                'tanggal' => $row['tanggal'],
+                'tanggal' => Date::excelToDateTimeObject($row['tanggal'])->format('Y-m-d'),
                 'kode_transaksi' => $row['kode_transaksi'],
                 'penerimaan' => $row['penerimaan'],
                 'pengeluaran' => $row['pengeluaran'],

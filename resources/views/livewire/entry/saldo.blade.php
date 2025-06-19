@@ -108,7 +108,7 @@
                 </tr>
             </thead>
             <tbody>
-                {{-- @if($saldo) --}}
+                @if($saldo)
                 <tr>
                     <td>{{ $saldo->giro }}</td>
                     <td>{{ $saldo->deposito }}</td>
@@ -120,11 +120,11 @@
                     <td>{{ $saldo->penerimaan }}</td>
                     <td>{{ $saldo->pengeluaran }}</td>
                 </tr>
-                {{-- @else
+                @else
                 <tr>
                     <td colspan="9" class="text-center">Belum ada saldo</td>
                 </tr>
-                @endif --}}
+                @endif
             </tbody>
         </table>
     </div>

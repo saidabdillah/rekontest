@@ -30,7 +30,7 @@ class RegSpbImport implements ToCollection, WithHeadingRow, WithMultipleSheets
         foreach ($rows as $row) {
             TbRegSpb::create([
                 'sub_unit' => $row['subunit'],
-                'tanggal' => $row['tanggal'],
+                'tanggal' => Date::excelToDateTimeObject($row['tanggal'])->format('Y-m-d'),
                 'no_spb' => $row['no_spb'],
                 'no_sp2b' => $row['no_sp2b'],
                 'uraian' => $row['uraian_spb'],
