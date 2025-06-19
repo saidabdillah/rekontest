@@ -38,7 +38,7 @@ Route::prefix('entry')->group(function () {
             ->name('entry.create');
     });
 
-    Route::get('saldo', Saldo::class)->name('saldo')->middleware('role:super admin');
+    Route::get('saldo', Saldo::class)->name('saldo')->middleware(['role:super admin', 'auth']);
 });
 
 // Rekap

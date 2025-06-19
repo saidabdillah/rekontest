@@ -11,7 +11,6 @@
             <div class="space-y-6">
                 <div>
                     <flux:heading size="lg">Cari Entry</flux:heading>
-                    <flux:text class="mt-2">Lorem ipsum dolor sit amet.</flux:text>
                 </div>
 
                 <flux:input label="Tanggal Transaksi" type="date" wire:model="tanggal" autofocus
@@ -23,6 +22,7 @@
                     <flux:select.option value="{{ $kode->kode_transaksi }}">{{ $kode->id_rekon }}</flux:select.option>
                     @endforeach
                 </flux:select>
+                <flux:error name="kode_transaksi" />
 
 
                 <div class="flex">
@@ -82,16 +82,16 @@
                     <div class="space-y-6">
                         <div>
                             <flux:heading size="lg">Cari BKUBUD</flux:heading>
-                            <flux:text class="mt-2">Lorem ipsum dolor sit amet.</flux:text>
                         </div>
 
-                        <flux:input autofocus wire:model.live="query" wire:keydown="cariBkubuds"
+                        <flux:input autofocus wire:model="query" wire:input.debounce.150ms="cariBkubuds"
                             placeholder="Cari BKUBUD">
                             <x-slot name="iconTrailing">
                                 <flux:button size="sm" variant="subtle" icon="x-mark" class="-mr-1"
                                     wire:click="deleteQuery" />
                             </x-slot>
                         </flux:input>
+                        <flux:error name="query" />
 
                         <ul class="-mt-5 overflow-y-auto max-h-64">
                             @forelse($bkubuds as $item)
@@ -135,7 +135,7 @@
                 <flux:field>
                     <flux:label>Total Nomor Bukti</flux:label>
                     <flux:input readonly
-                        value="{{ $totalNomorBukti >= 0 ? Number::currency($totalNomorBukti, 'IDR', 'id') : '' }}" />
+                        value="{{ $totalNomorBukti >= 0 && isset($totalNomorBukti) ? Number::currency($totalNomorBukti, 'IDR', 'id') : '' }}" />
                 </flux:field>
             </div>
         </div>

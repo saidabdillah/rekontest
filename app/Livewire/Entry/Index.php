@@ -53,20 +53,25 @@ class Index extends Component
     public function pilihBkubud($bkubud)
     {
         $this->query = $bkubud;
-        // $this->dispatch('cari-bkubud');
+        $this->dispatch('cari-bkubuds');
     }
 
     public function cariBkubud()
     {
+        $this->validate([
+            'query' => 'required',
+        ], [
+            'query.required' => 'Pilih data dulu.',
+        ]);
         try {
-            if (empty($this->query)) throw new Exception('Pilih data dulu.');
+            // if (empty($this->query)) throw new Exception('Pilih data dulu.');
             $this->bkubud = Bkubud::where('no_bukti', $this->query)
                 ->orWhereLike('uraian', '%' . $this->query . '%')
                 ->orWhereLike('penerimaan', '%' . $this->query . '%')
                 ->orWhereLike('pengeluaran', '%' . $this->query . '%')
                 ->first();
-            if (!$this->bkubud) throw new Exception('Data tidak ditemukan');
             $this->totalNomorBukti = $this->bkubud->penerimaan + $this->bkubud->pengeluaran;
+            if (!$this->bkubud) throw new Exception('Data tidak ditemukan');
             $this->modal('lihat-bkubud')->close();
         } catch (\Throwable $th) {
             $this->modal('lihat-bkubud')->close();
@@ -84,16 +89,21 @@ class Index extends Component
 
     public function cariRekon()
     {
+        $this->validate([
+            'tanggal' => 'required',
+            'kode_transaksi' => 'required',
+        ], [
+            'tanggal.required' => 'Pilih tanggal dulu.',
+            'kode_transaksi.required' => 'Pilih kode transaksi dulu.',
+        ]);
+
         try {
-            if ($this->tanggal == null) throw new Exception('Pilih tanggal dulu.');
-            if ($this->kode_transaksi == null) throw new Exception('Pilih data dulu.');
             $this->rekon = Rekon::where('kode_transaksi', $this->kode_transaksi)->first();
             $this->totalKodeTransaksi = $this->rekon->penerimaan + $this->rekon->pengeluaran;
             $this->modal('lihat-rekon')->close();
         } catch (\Throwable $th) {
             $this->modal('lihat-rekon')->close();
             LivewireAlert::title('Gagal!')
-                ->text($th->getMessage())
                 ->error()
                 ->show();
         }
@@ -104,7 +114,6 @@ class Index extends Component
         try {
 
             if (empty($this->rekon) || empty($this->bkubud)) throw new Exception('Data tidak boleh kosong');
-            if ($this->rekon->tanggal !== $this->bkubud->tanggal) throw new Exception('Data tidak sesuai');
             if ($this->totalKodeTransaksi !== $this->totalNomorBukti) throw new Exception('Data tidak sesuai');
 
             $rekon = TbData::where('id_rekon', $this->rekon->id_rekon)->first();

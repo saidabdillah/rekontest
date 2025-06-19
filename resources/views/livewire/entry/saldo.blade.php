@@ -7,7 +7,7 @@
     </flux:modal.trigger>
 
     <flux:modal name="tambah-saldo" class="w-full">
-        <form wire:submit="updateSaldo" class="space-y-6">
+        <form wire:submit="editSaldo" class="space-y-6">
             <div>
                 <flux:heading size="lg">Edit Saldo</flux:heading>
             </div>
@@ -108,17 +108,23 @@
                 </tr>
             </thead>
             <tbody>
+                {{-- @if($saldo) --}}
                 <tr>
-                    <td>{{ Number::currency($saldo?->giro, 'IDR', 'id') }}</td>
-                    <td>{{ Number::currency($saldo?->deposito, 'IDR', 'id') }}</td>
-                    <td>{{ Number::currency($saldo?->jkn, 'IDR', 'id') }}</td>
-                    <td>{{ Number::currency($saldo?->bok, 'IDR', 'id') }}</td>
-                    <td>{{ Number::currency($saldo?->bop, 'IDR', 'id') }}</td>
-                    <td>{{ Number::currency($saldo?->blud, 'IDR', 'id') }}</td>
-                    <td>{{ Number::currency($saldo?->bos, 'IDR', 'id') }}</td>
-                    <td>{{ Number::currency($saldo?->penerimaan, 'IDR', 'id') }}</td>
-                    <td>{{ Number::currency($saldo?->pengeluaran, 'IDR', 'id') }}</td>
+                    <td>{{ $saldo->giro }}</td>
+                    <td>{{ $saldo->deposito }}</td>
+                    <td>{{ $saldo->jkn }}</td>
+                    <td>{{ $saldo->bok }}</td>
+                    <td>{{ $saldo->bop }}</td>
+                    <td>{{ $saldo->blud }}</td>
+                    <td>{{ $saldo->bos }}</td>
+                    <td>{{ $saldo->penerimaan }}</td>
+                    <td>{{ $saldo->pengeluaran }}</td>
                 </tr>
+                {{-- @else
+                <tr>
+                    <td colspan="9" class="text-center">Belum ada saldo</td>
+                </tr>
+                @endif --}}
             </tbody>
         </table>
     </div>

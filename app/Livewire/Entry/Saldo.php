@@ -22,15 +22,15 @@ class Saldo extends Component
     public function mount()
     {
         $this->saldo = saldoAwal::first();
-        $this->giro = $this->saldo->giro;
-        $this->deposito = $this->saldo->deposito;
-        $this->jkn = $this->saldo->jkn;
-        $this->bok = $this->saldo->bok;
-        $this->bop = $this->saldo->bop;
-        $this->blud = $this->saldo->blud;
-        $this->bos = $this->saldo->bos;
-        $this->penerimaan = $this->saldo->penerimaan;
-        $this->pengeluaran = $this->saldo->pengeluaran;
+        $this->giro = $this->saldo->giro ?? 0;
+        $this->deposito = $this->saldo->deposito ?? 0;
+        $this->jkn = $this->saldo->jkn ?? 0;
+        $this->bok = $this->saldo->bok ?? 0;
+        $this->bop = $this->saldo->bop ?? 0;
+        $this->blud = $this->saldo->blud ?? 0;
+        $this->bos = $this->saldo->bos ?? 0;
+        $this->penerimaan = $this->saldo->penerimaan ?? 0;
+        $this->pengeluaran = $this->saldo->pengeluaran ?? 0;
     }
 
     public function render()
@@ -38,21 +38,31 @@ class Saldo extends Component
         return view('livewire.entry.saldo');
     }
 
-    public function updateSaldo()
+    public function editSaldo()
     {
         $validate = $this->validate([
-            'deposito' => 'required',
-            'giro' => 'required',
-            'jkn' => 'required',
-            'bok' => 'required',
-            'bop' => 'required',
-            'blud' => 'required',
-            'bos' => 'required',
-            'penerimaan' => 'required',
-            'pengeluaran' => 'required',
+            'giro' => 'required|numeric|decimal:2',
+            'deposito' => 'required|numeric|decimal:2',
+            'jkn' => 'required|numeric|decimal:2',
+            'bok' => 'required|numeric|decimal:2',
+            'bop' => 'required|numeric|decimal:2',
+            'blud' => 'required|numeric|decimal:2',
+            'bos' => 'required|numeric|decimal:2',
+            'penerimaan' => 'required|numeric|decimal:2',
+            'pengeluaran' => 'required|numeric|decimal:2',
+        ], [
+            '*.required' => 'Pilih data dulu.',
+            '*.numeric' => ':attribute harus angka.',
+            '*.decimal' => ':attribute harus angka decimal dan ada 2 angka di belakang koma.',
         ]);
-        $this->saldo->update($validate);
-        $this->reset('deposito', 'giro', 'jkn', 'bok', 'bop', 'blud', 'bos', 'penerimaan', 'pengeluaran');
+
+        if ($this->saldo) {
+            $this->saldo->update($validate);
+        } else {
+            SaldoAwal::create($validate);
+        }
+
+        // $this->reset('deposito', 'giro', 'jkn', 'bok', 'bop', 'blud', 'bos', 'penerimaan', 'pengeluaran');
         $this->modal('tambah-saldo')->close();
         LivewireAlert::title('Berhasil!')
             ->success()

@@ -5,7 +5,8 @@
     <section class="grid gap-4 mt-10">
         <div class="grid gap-4 sm:w-1/2 xl:w-1/3 items-end">
             <flux:input type="file" wire:model="rekon" accept=".xlsx,xls" label="Rekon" />
-            <flux:button variant="primary" wire:click="uploadRekon">Upload Rekon</flux:button>
+            <flux:button variant="primary" wire:click="uploadRekon">Upload Rekon
+            </flux:button>
         </div>
 
         <div class="grid gap-4 sm:w-1/2 xl:w-1/3 items-end">
